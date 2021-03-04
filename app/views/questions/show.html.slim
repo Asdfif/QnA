@@ -1,2 +1,13 @@
 h1= @question.title
 p= @question.body
+
+table
+  tr
+    th= 'Answers'
+    = render partial: 'answers/answer', collection: @question.answers
+
+= form_with model: [@question, @answer], local: true do |f|
+  = render 'shared/errors', resource: @answer
+  = f.label 'Your answer'
+  = f.text_area :body, id: :answer_body
+  = f.submit 'Send answer'
