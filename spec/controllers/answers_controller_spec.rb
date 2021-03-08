@@ -6,15 +6,6 @@ RSpec.describe AnswersController, type: :controller do
   let (:question) { create(:question, user: user) }
   let (:answer) { create(:answer, question: question, user: user) }
 
-
-  # describe 'GET #new' do
-  #   it 'renders new view' do
-  #     get :new, params: { question_id: question }
-
-  #     expect(response).to render_template :new
-  #   end
-  # end
-
   describe 'POST #create' do
     before { login(user) }
 
@@ -60,7 +51,7 @@ RSpec.describe AnswersController, type: :controller do
       expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)      
     end
 
-    it 'redirects to index' do
+    it 'redirects to question#show' do
       delete :destroy, params: { id: answer }
       expect(response).to redirect_to question_path(question)
     end

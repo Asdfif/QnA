@@ -7,16 +7,13 @@ feature 'User can delete answer', %q{
   given(:author) { create(:user) }
   given(:user) { create(:user) }
   given(:question) { create(:question, user: author) }
+  given!(:answer) { create(:answer, user: author, question: question) }
 
   describe 'Current user = author' do
-
     background do
-      create(:answer, user: author, question: question)
-
       sign_in(author)
 
-      visit question_path(question)   
-      click_on 'Delete answer'
+      visit_question_path_and_click_delete(question)
     end
 
     scenario 'Author can delete his answer' do
@@ -27,12 +24,9 @@ feature 'User can delete answer', %q{
   describe 'Current user != author' do
 
     background do
-      create(:answer, user: author, question: question)
-
       sign_in(user)
       
-      visit question_path(question)   
-      click_on 'Delete answer'
+      visit_question_path_and_click_delete(question)
     end
 
     scenario 'Not author can not delete answer' do
@@ -41,12 +35,16 @@ feature 'User can delete answer', %q{
   end
 
   describe 'Unauthorized user' do
-    scenario "can't delete question" do
-      create(:answer, user: author, question: question)
-
-      visit question_path(question)
-      click_on 'Delete question'
+    scenario "can't delete answer" do
+      visit_question_path_and_click_delete(question)
       expect(page).to have_content "You need to sign in or sign up before continuing."
     end
+  end
+
+  private
+
+  def visit_question_path_and_click_delete(question)
+    visit question_path(question)
+    click_on 'Delete answer'
   end
 end
