@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let (:question) { create(:question) }
   let(:user) { create(:user) }
+  let (:question) { create(:question, user: user) }
 
   describe 'GET #index' do
-    let (:questions) { create_list(:question, 3) }
+    let (:questions) { create_list(:question, 3, user: user) }
 
     before { get :index }
 
@@ -51,7 +51,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with valid attributes' do
       it 'saves a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question)}}.to change(Question, :count).by(1)
+        expect { post :create, params: { question: attributes_for(:question), user: user}}.to change(Question, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -62,7 +62,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with unvalids attributes' do
       it 'does not save the question' do
-        expect { post :create, params: { question: attributes_for(:question, :invalid)}}.to_not change(Question, :count)
+        expect { post :create, params: { question: attributes_for(:question, :invalid), user: user}}.to_not change(Question, :count)
       end
 
       it 're-renders new view' do
@@ -95,7 +95,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'with unvalids attributes' do
+    context 'with invalids attributes' do
       before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
       it 'does not change question' do
         question.reload
@@ -113,7 +113,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'DELETE #destroy' do
     before { login(user) }
 
-    let! (:question) { create(:question) }
+    let! (:question) { create(:question, user: user) }
 
     it 'assigns the requested question to @question' do
       delete :destroy, params: { id: question }

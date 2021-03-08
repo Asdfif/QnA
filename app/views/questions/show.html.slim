@@ -6,8 +6,8 @@ table
     th= 'Answers'
     = render partial: 'answers/answer', collection: @question.answers
 
-= form_with model: [@question, @answer], local: true do |f|
-  = render 'shared/errors', resource: @answer
-  = f.label 'Your answer'
-  = f.text_area :body, id: :answer_body
-  = f.submit 'Send answer'
+= render 'shared/errors', resource: @answer
+
+= render partial: 'answers/new'
+
+= link_to 'Delete question', question_path(@question), method: :delete, data: { confirm: 'Sure?' }

@@ -5,7 +5,7 @@ feature 'Authenticated user can write answer for current question', %q{
   I'd like to be able to write answer for current question
 } do
   given(:user) { create(:user) }
-  given(:question) { create(:question) }
+  given(:question) { create(:question, user: user) }
 
   scenario 'User can write answer for question' do
     sign_in(user)
