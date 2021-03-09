@@ -110,7 +110,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    describe 'User is author' do
+    context 'User is author' do
       let (:author) { create(:user) }
       before { login(author) }
 
@@ -131,7 +131,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    describe 'User is not author' do
+    context 'User is not author' do
       let (:author) { create(:user) }
       before { login(user) }
 
