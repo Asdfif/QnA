@@ -9,7 +9,6 @@ feature 'User can delete question', %q{
   given(:question) { create(:question, user: author) }
 
   describe 'Current user is an author' do
-
     background do
       sign_in(author)
 
@@ -23,7 +22,6 @@ feature 'User can delete question', %q{
   end
 
   describe 'Current user is not an author' do
-
     background do
       sign_in(user)
 

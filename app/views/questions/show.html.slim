@@ -4,7 +4,7 @@ p= @question.body
 table
   tr
     th= 'Answers'
-    = render partial: 'answers/answer', collection: @question.answers
+    = render @question.answers
 
 = render 'shared/errors', resource: @answer
 

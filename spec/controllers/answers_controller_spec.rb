@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
-
   let (:question) { create(:question, user: user) }
   let (:answer) { create(:answer, question: question, user: user) }
 
@@ -58,12 +57,12 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   private
-    def valid_params
-      { answer: attributes_for(:answer), question_id: question.id, user: user}
-    end
+ 
+  def valid_params
+    { answer: attributes_for(:answer), question_id: question.id, user: user}
+  end
 
-    def invalid_params
-      { answer: attributes_for(:answer, :invalid), question_id: question.id, user: user}
-    end
-  
+  def invalid_params
+    { answer: attributes_for(:answer, :invalid), question_id: question.id, user: user}
+  end 
 end

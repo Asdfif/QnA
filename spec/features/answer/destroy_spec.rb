@@ -3,7 +3,6 @@ require 'rails_helper'
 feature 'User can delete answer', %q{
   I'd like to be able to delete my answer
 } do
-  
   given(:author) { create(:user) }
   given(:user) { create(:user) }
   given(:question) { create(:question, user: author) }
@@ -22,7 +21,6 @@ feature 'User can delete answer', %q{
   end
 
   describe 'Current user is not an author' do
-
     background do
       sign_in_and_visit(user, question)  
     end

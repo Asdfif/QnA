@@ -5,7 +5,6 @@ feature 'User can register', %q{
   As an unregistred user
   I'd like to be able to register
 } do
-
   background { visit new_user_registration_path }
 
   scenario 'Unregistered user tries to sign up wth valid params' do

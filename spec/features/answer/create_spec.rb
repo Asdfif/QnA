@@ -8,7 +8,6 @@ feature 'User can create answer', %q{
   given(:question) { create(:question, user: user) }
 
   describe 'Authenticate user' do
-
     background do
       sign_in(user)
 
