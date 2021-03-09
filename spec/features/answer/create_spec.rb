@@ -1,5 +1,4 @@
 require 'rails_helper'
-
 feature 'User can create answer', %q{
   In order to give answer to a community
   I'd like to be able to give the answer

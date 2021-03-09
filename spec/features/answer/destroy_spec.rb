@@ -1,5 +1,4 @@
 require 'rails_helper'
-
 feature 'User can delete answer', %q{
   I'd like to be able to delete my answer
 } do
@@ -17,6 +16,7 @@ feature 'User can delete answer', %q{
       click_on 'Delete answer'
 
       expect(page).to have_content 'Answer deleted'
+      expect(page).to_not have_content "#{attributes_for(:answer)[:body]}"
     end
   end
 

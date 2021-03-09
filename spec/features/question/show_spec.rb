@@ -1,5 +1,4 @@
 require 'rails_helper'
-
 feature 'Authenticated user can write answer for current question', %q{
   In order to community
   I'd like to be able to write answer for current question
@@ -13,8 +12,8 @@ feature 'Authenticated user can write answer for current question', %q{
     visit question_path(question)
 
     expect(page).to have_content 'Your answer'
+    expect(page).to have_content attributes_for(:question)[:body]    
+    expect(page).to have_content attributes_for(:question)[:title]
     expect(page).to have_button 'Send answer'
   end
-
-
 end

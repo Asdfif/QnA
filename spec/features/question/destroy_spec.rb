@@ -1,9 +1,7 @@
 require 'rails_helper'
-
 feature 'User can delete question', %q{
   I'd like to be able to delete my question
 } do
-  
   given(:author) { create(:user) }
   given(:user) { create(:user) }
   given(:question) { create(:question, user: author) }
@@ -18,6 +16,7 @@ feature 'User can delete question', %q{
 
     scenario 'Author can delete his question' do
       expect(page).to have_content 'Question deleted'
+      expect(page).to_not have_content "#{attributes_for(:question)[:body]}"
     end
   end
 
