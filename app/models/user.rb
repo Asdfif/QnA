@@ -7,6 +7,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   def own_it?(resource)
-    resource.user.id == current_user.id
+    resource.user.id == id
   end
 end
