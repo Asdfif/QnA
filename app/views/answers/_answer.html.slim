@@ -1,3 +1,4 @@
 tr
   td= answer.body
-  td= link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Sure?' }
+  - if current_user.present? && current_user.own_it?(answer)
+    td= link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Sure?' }

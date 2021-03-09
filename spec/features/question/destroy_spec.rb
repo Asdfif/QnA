@@ -8,7 +8,7 @@ feature 'User can delete question', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user: author) }
 
-  describe 'Current user = author' do
+  describe 'Current user is an author' do
 
     background do
       sign_in(author)
@@ -22,25 +22,23 @@ feature 'User can delete question', %q{
     end
   end
 
-  describe 'Current user != author' do
+  describe 'Current user is not an author' do
 
     background do
       sign_in(user)
 
       visit question_path(question)
-      click_on 'Delete question'
     end
 
     scenario 'Not author can not delete question' do
-      expect(page).to have_content "You can't to that"
+      expect(page).to_not have_content 'Delete question'
     end
   end
 
   describe 'Unauthorized user' do
     scenario "can't delete question" do
       visit question_path(question)
-      click_on 'Delete question'
-      expect(page).to have_content "You need to sign in or sign up before continuing."
+      expect(page).to_not have_content 'Delete question'
     end
   end
 end
