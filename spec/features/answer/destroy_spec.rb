@@ -16,7 +16,7 @@ feature 'User can delete answer', %q{
       click_on 'Delete answer'
 
       expect(page).to have_content 'Answer deleted'
-      expect(page).to_not have_content "#{attributes_for(:answer)[:body]}"
+      expect(page).to_not have_content "#{answer.body}"
     end
   end
 
