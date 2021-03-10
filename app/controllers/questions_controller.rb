@@ -31,7 +31,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user.own_it?(question)
+    if current_user.owner_of?(question)
       question.destroy 
       redirect_to questions_path, notice: 'Question deleted'
     else

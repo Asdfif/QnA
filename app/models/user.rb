@@ -6,7 +6,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  def own_it?(resource)
+  def owner_of?(resource)
     resource.user_id == id
   end
 end
