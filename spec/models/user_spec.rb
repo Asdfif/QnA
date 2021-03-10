@@ -1,0 +1,13 @@
+require 'rails_helper'
+RSpec.describe User, type: :model do
+  it { should validate_presence_of :email }
+  it { should validate_presence_of :password }
+
+  it 'can be owner of resource' do
+    author = create(:user)
+    question = create(:question, user: author)
+    answer = create(:answer, user: author, question: question)
+
+    expect(author).to be_owner_of(answer)
+  end
+end

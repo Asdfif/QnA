@@ -1,0 +1,14 @@
+h1= @question.title
+p= @question.body
+
+table
+  tr
+    th= 'Answers'
+    = render @question.answers
+
+= render 'shared/errors', resource: @answer
+
+= render partial: 'answers/new'
+
+- if current_user&.owner_of?(@question)
+  = link_to 'Delete question', question_path(@question), method: :delete, data: { confirm: 'Sure?' }
