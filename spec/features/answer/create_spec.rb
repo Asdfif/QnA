@@ -13,14 +13,15 @@ feature 'User can create answer', %q{
       visit question_path(question)
     end
 
-    scenario 'valid answer' do 
+    scenario 'valid answer', js: true do 
       fill_in :answer_body, with: 'answer text'
       click_on 'Send answer'
       
+      expect(current_path).to eq question_path(question)
       expect(page).to have_content 'answer text'
     end
 
-    scenario 'answer the question with errors' do
+    scenario 'answer the question with errors', js: true do
       click_on 'Send answer'
       
       expect(page).to have_content ('error' || 'errors')
