@@ -16,7 +16,7 @@ feature 'User can delete question', %q{
 
     scenario 'Author can delete his question' do
       expect(page).to have_content 'Question deleted'
-      expect(page).to_not have_content "#{attributes_for(:question)[:body]}"
+      expect(page).to_not have_content question.body
     end
   end
 
