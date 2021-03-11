@@ -16,12 +16,13 @@ feature 'User can edt his answer', %q{
   end
 
   describe 'Authenticated user', js: true do
-
-    scenario 'edit his answer' do
+    background do
       sign_in(author)
       visit question_path(question)
       click_on 'Edit'
+    end
 
+    scenario 'edit his answer' do
       within '.answers' do
         fill_in :answer_body, with: 'edited answer'
         click_on 'Edit answer'
@@ -32,7 +33,14 @@ feature 'User can edt his answer', %q{
       end
     end
 
-    scenario 'edits his answer with errors' 
+    scenario 'edits his answer with errors' do
+      within '.answers' do
+        fill_in :answer_body, with: ''
+        click_on 'Edit answer'
+
+        expect(page).to have_content 'error(s)'
+      end
+    end
 
     scenario "tries to edit other user's answer" 
   end

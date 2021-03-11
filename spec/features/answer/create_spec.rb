@@ -24,7 +24,7 @@ feature 'User can create answer', %q{
     scenario 'answer the question with errors'do
       click_on 'Send answer'
       
-      expect(page).to have_content ('error' || 'errors')
+      expect(page).to have_content 'error(s)'
     end
   end
 
