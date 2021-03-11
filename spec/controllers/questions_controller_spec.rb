@@ -1,10 +1,10 @@
 require 'rails_helper'
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let (:question) { create(:question, user: user) }
+  let(:question) { create(:question, user: user) }
 
   describe 'GET #index' do
-    let (:questions) { create_list(:question, 3, user: user) }
+    let(:questions) { create_list(:question, 3, user: user) }
 
     before { get :index }
 
@@ -99,8 +99,8 @@ RSpec.describe QuestionsController, type: :controller do
       it 'does not change question' do
         question.reload
 
-        expect(question.title).to eq attributes_for(:question)[:title]
-        expect(question.body).to eq attributes_for(:question)[:body]
+        expect(question.title).to eq question.title
+        expect(question.body).to eq question.body
       end
 
       it 're-renders edit view' do

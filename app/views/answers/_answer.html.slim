@@ -1,5 +1,10 @@
-tr
-  - if answer.persisted?
-    td= answer.body
-    - if current_user&.owner_of?(answer)
-      td= link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Sure?' }
+- if answer.persisted?
+  p= answer.body
+  - if current_user&.owner_of?(answer)
+    = link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Sure?' }
+    br= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+
+    = form_with model: answer, local: false, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+      = f.label 'Your answer'
+      = f.text_area :body, id: :answer_body
+      = f.submit 'Edit answer'

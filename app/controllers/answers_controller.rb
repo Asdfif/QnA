@@ -1,9 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-
-  def new
-    question
-  end
+  before_action :answer, only: %i[update destroy]
 
   def create
     @answer = current_user.answers.build(answer_params)
@@ -11,9 +8,14 @@ class AnswersController < ApplicationController
     @answer.save
   end
 
+  def update
+    @answer.update(answer_params)
+    @question = @answer.question
+  end
+
   def destroy
-    if current_user.owner_of?(answer)
-      answer.destroy 
+    if current_user.owner_of?(@answer)
+      @answer.destroy 
       redirect_to question_path(answer.question), notice: 'Answer deleted'
     else
       redirect_to question_path(answer.question), notice: "You can't to that"
@@ -29,6 +31,8 @@ class AnswersController < ApplicationController
   def question
     @question ||= Question.find(params[:question_id])
   end
+
+  helper_method :question
 
   def answer_params
     params.require(:answer).permit(:body)
