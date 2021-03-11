@@ -1,5 +1,5 @@
 require 'rails_helper'
-feature 'User can edt his answer', %q{
+feature 'User can edit his answer', %q{
   In order to correct mistakes
   As an author of answer
   I'd like to be able to edit my answer
@@ -16,13 +16,8 @@ feature 'User can edt his answer', %q{
   end
 
   describe 'Authenticated user', js: true do
-    background do
-      sign_in(author)
-      visit question_path(question)
-      click_on 'Edit'
-    end
-
     scenario 'edit his answer' do
+      sign_in_as_author
       within '.answers' do
         fill_in :answer_body, with: 'edited answer'
         click_on 'Edit answer'
@@ -34,6 +29,7 @@ feature 'User can edt his answer', %q{
     end
 
     scenario 'edits his answer with errors' do
+      sign_in_as_author
       within '.answers' do
         fill_in :answer_body, with: ''
         click_on 'Edit answer'
@@ -42,7 +38,21 @@ feature 'User can edt his answer', %q{
       end
     end
 
-    scenario "tries to edit other user's answer" 
+    scenario "tries to edit other user's answer" do
+      sign_in(user)
+      visit question_path(question)
+
+      expect(page).to_not have_link 'Edit'
+    end
+
   end
 
+
+  private 
+
+  def sign_in_as_author
+    sign_in(author)
+    visit question_path(question)
+    click_on 'Edit'
+  end
 end
