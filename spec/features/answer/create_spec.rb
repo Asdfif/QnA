@@ -6,14 +6,14 @@ feature 'User can create answer', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
 
-  describe 'Authenticate user' do
+  describe 'Authenticate user', js: true  do
     background do
       sign_in(user)
 
       visit question_path(question)
     end
 
-    scenario 'valid answer', js: true do 
+    scenario 'valid answer' do 
       fill_in :answer_body, with: 'answer text'
       click_on 'Send answer'
       
@@ -21,7 +21,7 @@ feature 'User can create answer', %q{
       expect(page).to have_content 'answer text'
     end
 
-    scenario 'answer the question with errors', js: true do
+    scenario 'answer the question with errors'do
       click_on 'Send answer'
       
       expect(page).to have_content ('error' || 'errors')

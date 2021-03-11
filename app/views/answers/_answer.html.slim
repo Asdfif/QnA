@@ -1,4 +1,6 @@
 tr
-  td= answer.body
-  - if current_user&.owner_of?(answer)
-    td= link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Sure?' }
+  - if answer.persisted?
+    td= answer.body
+    = ' afsafsafsfaf'
+    - if current_user&.owner_of?(answer)
+      td= link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Sure?' }

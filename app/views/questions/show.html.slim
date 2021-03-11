@@ -1,12 +1,12 @@
 h1= @question.title
 p= @question.body
-
+th= 'Answers'
 table
   tr
-    th= 'Answers'
-    = render @question.answers
+    .answers
+      = render @question.answers
 
-= render 'shared/errors', resource: @answer
+.answer-errors
 
 = render partial: 'answers/new'
 

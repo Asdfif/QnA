@@ -14,9 +14,8 @@ feature 'User can delete answer', %q{
 
     scenario 'Author can delete his answer' do
       click_on 'Delete answer'
-
+      expect(page).to_not have_content answer.body
       expect(page).to have_content 'Answer deleted'
-      expect(page).to_not have_content "#{answer.body}"
     end
   end
 
