@@ -9,15 +9,11 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer.update(answer_params)
+    @answer.update(answer_params) if current_user.owner_of?(@answer)
   end
 
   def destroy
     @answer.destroy if current_user.owner_of?(@answer)
-      # 
-    #   redirect_to question_path(answer.question), notice: 'Answer deleted'
-    # else
-    #   redirect_to question_path(answer.question), notice: "You can't to that"
   end
 
   private

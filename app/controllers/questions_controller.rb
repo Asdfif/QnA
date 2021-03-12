@@ -21,13 +21,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    # if current_user.owner_of?(@question)
-      @question.update(question_params)
-    # if question.update(question_params)
-    # redirect_to @question
-    # else
-    #   render :edit
-    # end
+    @question.update(question_params) if current_user.owner_of?(@question)
   end
 
   def destroy
