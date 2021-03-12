@@ -12,10 +12,7 @@ feature 'User can delete answer', %q{
     accept_alert do  
       click_on 'Delete answer'
     end
-
     expect(page).to_not have_content answer.body
-    save_and_open_page
-    # expect(page).to have_content 'Answer deleted'
   end
 
   scenario 'Not author can not delete answer' do
