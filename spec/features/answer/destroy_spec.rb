@@ -7,11 +7,15 @@ feature 'User can delete answer', %q{
   given(:question) { create(:question, user: author) }
   given!(:answer) { create(:answer, user: author, question: question) }
 
-  scenario 'Author can delete his answer' do
-    sign_in_and_visit(author, question)  
-    click_on 'Delete answer'
+  scenario 'Author can delete his answer', js: true do
+    sign_in_and_visit(author, question)
+    accept_alert do  
+      click_on 'Delete answer'
+    end
+
     expect(page).to_not have_content answer.body
-    expect(page).to have_content 'Answer deleted'
+    save_and_open_page
+    # expect(page).to have_content 'Answer deleted'
   end
 
   scenario 'Not author can not delete answer' do

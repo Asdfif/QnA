@@ -44,9 +44,7 @@ feature 'User can edit his answer', %q{
 
       expect(page).to_not have_link 'Edit'
     end
-
   end
-
 
   private 
 

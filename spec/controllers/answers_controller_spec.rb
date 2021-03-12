@@ -41,17 +41,17 @@ RSpec.describe AnswersController, type: :controller do
       let! (:answer) { create(:answer, question: question, user: author) }
 
       it 'assigns the requested answer to @answer' do
-        delete :destroy, params: { id: answer }
+        delete :destroy, params: { id: answer }, format: :js
         expect(assigns(:answer)).to eq answer
       end
 
       it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)      
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)      
       end
 
-      it 'redirects to question#show' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'renders destroy view' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
@@ -61,17 +61,18 @@ RSpec.describe AnswersController, type: :controller do
       let! (:answer) { create(:answer, question: question, user: author) }
 
       it 'assigns the requested answer to @answer' do
-        delete :destroy, params: { id: answer }
+        delete :destroy, params: { id: answer }, format: :js
         expect(assigns(:answer)).to eq answer
       end
 
       it ' do not deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)     
+        expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)     
       end
 
-      it 'redirects to question#show' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+      # !!!!!!!!!!
+      it 'renders destroy view' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end

@@ -14,12 +14,11 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.owner_of?(@answer)
-      @answer.destroy 
-      redirect_to question_path(answer.question), notice: 'Answer deleted'
-    else
-      redirect_to question_path(answer.question), notice: "You can't to that"
-    end
+    @answer.destroy if current_user.owner_of?(@answer)
+      # 
+    #   redirect_to question_path(answer.question), notice: 'Answer deleted'
+    # else
+    #   redirect_to question_path(answer.question), notice: "You can't to that"
   end
 
   private
