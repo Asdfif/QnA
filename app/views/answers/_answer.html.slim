@@ -13,3 +13,6 @@
         = f.label 'Your answer'
         = f.text_area :body, id: :answer_body
         = f.submit 'Edit answer'
+
+    - if answer.best != true && current_user&.owner_of?(answer.question)
+        br= link_to 'Make it best', make_it_best_path(answer), method: :patch, remote: true

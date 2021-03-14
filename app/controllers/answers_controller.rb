@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :answer, only: %i[update destroy]
+  before_action :answer, only: %i[update destroy make_it_best]
 
   def create
     @answer = current_user.answers.build(answer_params)
@@ -16,6 +16,11 @@ class AnswersController < ApplicationController
     @answer.destroy if current_user.owner_of?(@answer)
   end
 
+  def make_it_best
+    @prev_best_answer_id = @answer.question.best_answer&.id
+    @answer.make_it_best
+  end
+
   private
 
   def answer
@@ -25,8 +30,6 @@ class AnswersController < ApplicationController
   def question
     @question ||= Question.find(params[:question_id])
   end
-
-  helper_method :question
 
   def answer_params
     params.require(:answer).permit(:body)

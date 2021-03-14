@@ -124,15 +124,15 @@ RSpec.describe QuestionsController, type: :controller do
         end
 
       it 'does not change question attributes' do
-          question.reload
+        question.reload
 
-          expect(question.title).to eq question.title
-          expect(question.body).to eq question.body
-        end
+        expect(question.title).to eq question.title
+        expect(question.body).to eq question.body
+      end
 
-        it 're-renders update view' do
-          expect(response).to render_template :update        
-        end
+      it 're-renders update view' do
+        expect(response).to render_template :update        
+      end
     end
   end
 
