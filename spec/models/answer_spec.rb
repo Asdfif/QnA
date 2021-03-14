@@ -13,4 +13,14 @@ RSpec.describe Answer, type: :model do
 
     expect(question.best_answer).to eq answer
   end
+  
+  it 'can be the only best answer for one question' do
+    author = create(:user)
+    question = create(:question, user: author)
+    answer1 = create(:answer, user: author, question: question, best: true)
+    answer2 = create(:answer, user: author, question: question, best: true)
+
+    expect(question.answers.where(best: true).count).to eq 1
+  end
+
 end

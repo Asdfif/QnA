@@ -17,8 +17,10 @@ class AnswersController < ApplicationController
   end
 
   def make_it_best
-    @prev_best_answer_id = @answer.question.best_answer&.id
-    @answer.make_it_best
+    if current_user&.owner_of?(@answer.question)
+      @prev_best_answer_id = @answer.question.best_answer&.id
+      @answer.make_it_best
+    end
   end
 
   private

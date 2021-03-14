@@ -135,6 +135,51 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+
+  describe 'PATCH #make_it_best', js: true do
+    context 'User is not author' do
+      let(:not_author) { create(:user) }
+      let!(:answer) { create(:answer, user: user, question: question) }
+      
+      before do 
+        login(not_author)
+        patch :make_it_best, params: { id: answer }, format: :js
+      end
+
+      it 'does not changes attribute "best" for true' do
+        answer.reload
+
+        expect(answer.best).to_not eq true
+      end
+
+      it "does not changes question's best answer for self" do
+        question.reload
+        expect(question.best_answer).to_not eq answer
+      end
+
+    end
+
+    context 'User is author' do
+      let!(:answer) { create(:answer, user: user, question: question) }
+      
+      before do 
+        login(user)
+        patch :make_it_best, params: { id: answer }, format: :js
+      end
+
+      it 'changes attribute "best" for true' do
+        answer.reload
+
+        expect(answer.best).to eq true
+      end
+
+      it "changes question's best answer for self" do
+        question.reload
+        expect(question.best_answer).to eq answer
+      end
+    end
+  end
+
   private
  
   def valid_params
