@@ -7,15 +7,17 @@ class Answer < ApplicationRecord
   validate :count_of_best
 
   def make_it_best
-    question.answers.each do |answer|
-      answer.update(best: false)
+    unless best?
+      Answer.transaction do
+        question.answers.update_all(best: false)
+        update!(best: true)
+      end
     end
-    update(best: true)
   end
 
   def count_of_best
-    if best && question.answers.where(best: true).count >= 1
-      update(best: false)
+    if best? && question&.answers.where(best: true).count >= 1
+      errors.add(:best, 'can not be more than 1 best answer for one question')
     end
   end
 end
