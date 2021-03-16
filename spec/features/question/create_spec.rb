@@ -32,7 +32,7 @@ feature 'User can create question', %q{
       expect(page).to have_content ('error' || 'errors')
     end
 
-    scenario 'asks a question with attached file' do
+    scenario 'asks a question with attached files' do
       question_title = attributes_for(:question)[:title]
       question_body = attributes_for(:question)[:body]
       fill_in 'Title', with: question_title
