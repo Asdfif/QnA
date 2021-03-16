@@ -31,6 +31,18 @@ feature 'User can create question', %q{
 
       expect(page).to have_content ('error' || 'errors')
     end
+
+    scenario 'asks a question with attached file' do
+      question_title = attributes_for(:question)[:title]
+      question_body = attributes_for(:question)[:body]
+      fill_in 'Title', with: question_title
+      fill_in 'Body', with: question_body
+
+      attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"
+      click_on 'Ask'
+
+      expect(page).to have_link 'rails_helper.rb'
+    end
   end
 
   scenario 'tries to ask a question' do
