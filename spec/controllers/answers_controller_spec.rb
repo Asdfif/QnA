@@ -180,6 +180,27 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #delete_file' do
+    let!(:answer) { create(:answer, user: user, question: question) }
+
+    before do
+      answer.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb', content_type: 'rb')
+    end
+
+    it "Author deletes answer's file" do
+      login(user)
+      patch :delete_file, params: { id: answer, file_id: answer.files.first.id }, format: :js
+
+      expect(answer.files.all).to be_empty
+    end
+
+    it "Not an author deletes question's file" do
+      patch :delete_file, params: { id: answer, file_id: answer.files.first.id }, format: :js
+
+      expect(answer.files.all).to_not be_empty
+    end
+  end
+
   private
  
   def valid_params

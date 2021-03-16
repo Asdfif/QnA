@@ -5,7 +5,7 @@
 
     - if answer.files.attached?
       - answer.files.each do |file|
-        p= link_to file.filename.to_s, url_for(file), target: :_blank
+        p data-file-id="#{file.id}"= link_to file.filename.to_s, url_for(file), target: :_blank
 
     - if current_user&.owner_of?(answer)
 
@@ -20,7 +20,12 @@
         p
           = f.label :files
           = f.file_field :files, multiple: true
-  
+        
+        - if answer.files.attached?
+          - answer.files.each do |file|
+            p data-file-id="#{file.id}"= file.filename.to_s
+            p data-file-id="#{file.id}"= link_to 'Delete file', delete_file_answer_path(answer, file_id: file.id), method: :patch, remote: true
+
         = f.submit 'Edit answer'
 
     - if !answer.best? && current_user&.owner_of?(answer.question)

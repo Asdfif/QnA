@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :answer, only: %i[update destroy make_it_best]
+  before_action :answer, only: %i[update destroy make_it_best delete_file]
 
   def create
     @answer = current_user.answers.build(answer_params)
@@ -14,6 +14,11 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy if current_user.owner_of?(@answer)
+  end
+
+  def delete_file
+    @file_id = params[:file_id]
+    delete_file_from_resource(@answer, @file_id)
   end
 
   def make_it_best
@@ -34,6 +39,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, :file_id, files: [])
   end
 end
