@@ -1,26 +1,25 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-
-  def new
-    question
-  end
+  before_action :answer, only: %i[update destroy make_it_best]
 
   def create
     @answer = current_user.answers.build(answer_params)
     @answer.question = question
-    if @answer.save
-      redirect_to @answer.question
-    else
-      render "questions/show"
-    end
+    @answer.save
+  end
+
+  def update
+    @answer.update(answer_params) if current_user.owner_of?(@answer)
   end
 
   def destroy
-    if current_user.owner_of?(answer)
-      answer.destroy 
-      redirect_to question_path(answer.question), notice: 'Answer deleted'
-    else
-      redirect_to question_path(answer.question), notice: "You can't to that"
+    @answer.destroy if current_user.owner_of?(@answer)
+  end
+
+  def make_it_best
+    if current_user&.owner_of?(@answer.question)
+      @prev_best_answer_id = @answer.question.best_answer&.id
+      @answer.make_it_best
     end
   end
 

@@ -20,14 +20,8 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def edit; end
-
   def update
-    if question.update(question_params)
-    redirect_to @question
-    else
-      render :edit
-    end
+    @question.update(question_params) if current_user.owner_of?(@question)
   end
 
   def destroy
@@ -45,7 +39,7 @@ class QuestionsController < ApplicationController
     @question ||= params[:id] ? Question.find(params[:id]) : Question.new
   end
 
-  helper_method :question
+  #helper_method :question
 
   def question_params
     params.require(:question).permit(:title, :body)

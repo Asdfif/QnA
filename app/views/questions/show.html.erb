@@ -1,0 +1,28 @@
+<h1><%= @question.title %></h1>
+<p> <%= @question.body %><p>
+<hr>
+<p>Best answer</p>
+
+<div class="best-answer" >
+  <% if @question.best_answer.present? %>
+    <div class='answers'>  
+      <%=  render @question.best_answer %>
+    </div>
+  <% else %>
+    Not selected by the author
+  <% end %>
+</div>
+<hr>
+<div class='answers'>
+  <p>Answers</p>
+  <%= render @question.answers.where(best: false) %>
+</div>
+
+<div class='answer-errors'>
+</div>
+
+<%= render partial: 'answers/new' %>
+
+<% if current_user&.owner_of?(@question) %>
+  <%= link_to 'Delete question', question_path(@question), method: :delete, data: { confirm: 'Sure?' } %>
+<% end %>

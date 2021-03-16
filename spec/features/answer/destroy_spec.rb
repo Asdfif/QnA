@@ -7,34 +7,22 @@ feature 'User can delete answer', %q{
   given(:question) { create(:question, user: author) }
   given!(:answer) { create(:answer, user: author, question: question) }
 
-  describe 'Current user is an author' do
-    background do
-      sign_in_and_visit(author, question)  
-    end
-
-    scenario 'Author can delete his answer' do
+  scenario 'Author can delete his answer', js: true do
+    sign_in_and_visit(author, question)
+    accept_alert do  
       click_on 'Delete answer'
-
-      expect(page).to have_content 'Answer deleted'
-      expect(page).to_not have_content "#{answer.body}"
     end
+    expect(page).to_not have_content answer.body
   end
 
-  describe 'Current user is not an author' do
-    background do
-      sign_in_and_visit(user, question)  
-    end
-
-    scenario 'Not author can not delete answer' do
-      expect(page).to_not have_content 'Delete answer'
-    end
+  scenario 'Not author can not delete answer' do
+    sign_in_and_visit(user, question)        
+    expect(page).to_not have_content 'Delete answer'
   end
 
-  describe 'Unauthorized user' do
-    scenario "can't delete question" do
-      visit question_path(question)
-      expect(page).to_not have_content 'Delete answer'
-    end
+  scenario "Unauthorized user can't delete question" do
+    visit question_path(question)
+    expect(page).to_not have_content 'Delete answer'
   end
 
   private
