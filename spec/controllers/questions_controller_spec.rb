@@ -35,16 +35,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'GET #edit' do
-    before { login(user) }
-
-    before { get :edit, params: { id: question } }
-
-    it 'renders edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'POST #create' do
     before { login(user) }
 
@@ -71,7 +61,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'PATCH #update as author' do
+  describe 'PATCH #update' do
     context 'User is author' do
       before { login(user) }
 
@@ -177,6 +167,25 @@ RSpec.describe QuestionsController, type: :controller do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to question_path(question)
       end
+    end
+  end
+
+  describe 'PATCH #delete_file' do
+    before do
+      question.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb', content_type: 'rb')
+    end
+
+    it "Author deletes question's file" do
+      login(user)
+      patch :delete_file, params: { id: question, file_id: question.files.first.id }, format: :js
+
+      expect(question.files.all).to be_empty
+    end
+
+    it "Not an author deletes question's file" do
+      patch :delete_file, params: { id: question, file_id: question.files.first.id }, format: :js
+
+      expect(question.files.all).to_not be_empty
     end
   end
 end

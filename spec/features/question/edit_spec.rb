@@ -53,6 +53,18 @@ feature 'User can edit his question', %q{
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'
     end
+
+    scenario 'Autor delete attached file' do
+      question.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb', content_type: 'rb')
+      sign_in_as_author
+
+      within '.questions' do
+
+        click_on 'Delete file'
+
+        expect(page).to_not have_content 'rails_helper.rb'
+      end
+    end
   end
 
   private 

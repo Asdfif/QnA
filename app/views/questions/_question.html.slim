@@ -19,5 +19,10 @@
         p
           = f.label :files
           = f.file_field :files, multiple: true
-  
+
+        - if question.files.attached?
+          - question.files.each do |file|
+            p data-file-id="#{file.id}"= file.filename.to_s
+            p data-file-id="#{file.id}"= link_to 'Delete file', delete_file_question_path(question, file_id: file.id), method: :patch, remote: true
+
         = f.submit 'Edit question'

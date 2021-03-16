@@ -24,6 +24,11 @@ class QuestionsController < ApplicationController
     @question.update(question_params) if current_user.owner_of?(@question)
   end
 
+  def delete_file
+    @file_id = params[:file_id]
+    delete_file_from_resource(@question, @file_id)
+  end
+
   def destroy
     if current_user.owner_of?(question)
       question.destroy 
@@ -42,6 +47,6 @@ class QuestionsController < ApplicationController
   #helper_method :question
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, :file_id, files: [])
   end
 end
