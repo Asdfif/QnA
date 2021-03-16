@@ -28,7 +28,7 @@ RSpec.describe Answer, type: :model do
       answer = create(:answer, user: author, question: question)
       answer.make_it_best
 
-      expect(answer.best).to eq true
+      expect(answer).to be_best
     end
 
     it '"make it best" method changes attribute "best" from true to false in other answers' do
