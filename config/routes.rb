@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   end
 
   resources :attachments, only: %i[] do
-    patch 'delete_file', on: :member
+    delete 'delete_file', on: :member
   end
   
 end
