@@ -1,7 +1,14 @@
 class AttachmentsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :file
+
   def delete_file
-    authenticate_user!
-    @file_id = params[:file_id]
-    ActiveStorage::Attachment.find(params[:file_id]).purge
+    @file.purge if current_user.owner_of?(@file.record)
+  end
+
+  private
+
+  def file
+    @file ||= ActiveStorage::Attachment.find(params[:file_id]) 
   end
 end
