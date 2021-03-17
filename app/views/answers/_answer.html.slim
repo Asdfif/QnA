@@ -24,7 +24,7 @@
         - if answer.files.attached?
           - answer.files.each do |file|
             p data-file-id="#{file.id}"= file.filename.to_s
-            p data-file-id="#{file.id}"= link_to 'Delete file', delete_file_answer_path(answer, file_id: file.id), method: :patch, remote: true
+            p data-file-id="#{file.id}"= link_to 'Delete file', delete_file_attachment_path(answer, file_id: file.id), method: :patch, remote: true
 
         = f.submit 'Edit answer'
 

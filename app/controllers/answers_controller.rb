@@ -16,11 +16,6 @@ class AnswersController < ApplicationController
     @answer.destroy if current_user.owner_of?(@answer)
   end
 
-  def delete_file
-    @file_id = params[:file_id]
-    delete_file_from_resource(@answer, @file_id)
-  end
-
   def make_it_best
     if current_user&.owner_of?(@answer.question)
       @prev_best_answer_id = @answer.question.best_answer&.id
@@ -39,6 +34,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, :file_id, files: [])
+    params.require(:answer).permit(:body, files: [])
   end
 end
