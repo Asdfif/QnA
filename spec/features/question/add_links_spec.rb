@@ -9,18 +9,51 @@ feature 'User can add links to question', %q{
 
 
   scenario 'User adds link when asks question' do
-    sign_in(author)
-    visit new_question_path
+    sign_in_and_visit_as(author)
 
-    fill_in 'Title', with: attributes_for(:question)[:title]
-    fill_in 'Body', with: attributes_for(:question)[:body]
+    fill_question_fields
 
-    fill_in 'Link name', with: 'My link'
-    fill_in 'Url', with: url
+    fill_link_fields(url)
 
     click_on 'Ask'
 
-    expect(page).to have_link 'My link', href: url
+    expect(page).to have_link url, href: url
+  end
 
+  scenario 'User adds links when give an answer', js: true do
+    url2 = 'http://google.ru'
+    sign_in_and_visit_as(author)
+
+    fill_question_fields
+
+    fill_link_fields(url)
+    
+    click_on 'add link'
+
+    within all(:css, '.nested-fields')[0] do
+      fill_link_fields(url2)
+    end
+
+    click_on 'Ask'
+
+    expect(page).to have_link url, href: url
+    expect(page).to have_link url2, href: url2
+  end
+
+  private
+
+  def sign_in_and_visit_as(user)
+    sign_in(user)
+    visit new_question_path
+  end
+
+  def fill_question_fields
+    fill_in 'Title', with: attributes_for(:question)[:title]
+    fill_in 'Body', with: attributes_for(:question)[:body]
+  end
+
+  def fill_link_fields(url)
+    fill_in 'Link name', with: url
+    fill_in 'Url', with: url
   end
 end
