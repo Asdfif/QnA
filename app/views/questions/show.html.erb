@@ -1,5 +1,6 @@
 <h1><%= @question.title %></h1>
 <p> <%= @question.body %><p>
+
 <% if @question.files.attached? %>
   <% @question.files.each do |file| %>
     <p>
@@ -7,6 +8,19 @@
     </p>
   <% end %>
 <% end %>
+
+<% if @question.links.present? %>
+  <div class="question-links">
+    <p>Links:
+      <ul>
+        <% @question.links.each do |l| %>
+          <li><%= link_to l.name, l.url, target: :_blank %></li>
+        <% end %>
+      </ul>
+    </p>
+  </div>
+<% end %>
+
 <hr>
 <p>Best answer</p>
 
