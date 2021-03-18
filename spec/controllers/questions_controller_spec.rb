@@ -35,16 +35,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'GET #edit' do
-    before { login(user) }
-
-    before { get :edit, params: { id: question } }
-
-    it 'renders edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'POST #create' do
     before { login(user) }
 
@@ -71,7 +61,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'PATCH #update as author' do
+  describe 'PATCH #update' do
     context 'User is author' do
       before { login(user) }
 

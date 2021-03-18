@@ -10,8 +10,19 @@
       br= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
 
       = form_with model: question, local: false, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|
-        = f.label 'Your question title'
-        = f.text_field :title
-        = f.label 'Your question body'
-        = f.text_area :body, id: :question_body
+        p  
+          = f.label 'Your question title'
+          = f.text_field :title
+        p
+          = f.label 'Your question body'
+          = f.text_area :body, id: :question_body
+        p
+          = f.label :files
+          = f.file_field :files, multiple: true
+
+        - if question.files.attached?
+          - question.files.each do |file|
+            p data-file-id="#{file.id}"= file.filename.to_s
+            p data-file-id="#{file.id}"= link_to 'Delete file', delete_file_attachment_path(question, file_id: file.id), method: :delete, remote: true
+
         = f.submit 'Edit question'
