@@ -18,9 +18,11 @@ class QuestionsController < ApplicationController
     @question = current_user.questions.build(question_params)
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
-    else
-      render :new
+    # else
+    #   render :new
     end
+    # @question = current_user.questions.build(question_params)
+    # @question.save
   end
 
   def update
@@ -48,6 +50,6 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, 
                                      :body, 
                                      files: [], 
-                                     links_attributes: [:name, :url])
+                                     links_attributes: [:name, :url, :_destroy])
   end
 end
