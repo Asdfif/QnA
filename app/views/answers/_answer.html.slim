@@ -8,7 +8,10 @@
         p Links:
         ul
           - answer.links.each do |l|
-            li= link_to l.name, l.url, target: :_blank
+            - if l.is_a_gist?
+              = render 'shared/gist', url: l.url
+            - else
+                li= link_to l.name, l.url, target: :_blank
 
     - if answer.files.attached?
       - answer.files.each do |file|

@@ -44,8 +44,23 @@ feature 'User can add links to question', %q{
     end
   end
 
+  # scenario 'User adds gist link when give an answer', js: true do
+  #   url = 'https://gist.github.com/Asdfif/7bc3bea166696968c424dff17fcc485f'
+  #   sign_in_and_visit_as(author)
+
+  #   fill_in :answer_body, with: attributes_for(:answer)[:body]
+
+  #   fill_link_fields(url)
+
+  #   click_on 'Send answer'
+
+  #   wait(page).to have_css('.gist')
+
+  #   expect(page).to have_content 'MYGIST'
+  # end
+
   private
-  
+
   def sign_in_and_visit_as(user)
     sign_in(user)
     visit question_path(question)
