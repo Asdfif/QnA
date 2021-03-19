@@ -8,7 +8,8 @@ feature 'User can edit his answer', %q{
   given!(:author) { create(:user) }
   given!(:question) { create(:question, user: author) }
   given!(:answer) { create(:answer, question: question, user: author) }
-  
+  given(:url) { 'https://github.com/Asdfif/QnA/pull/5' }
+
   scenario 'Unauthenticated user can not edit answer' do
     visit question_path(question)
 
@@ -45,6 +46,16 @@ feature 'User can edit his answer', %q{
       expect(page).to_not have_link 'Edit'
     end
 
+    scenario 'adds links to answer' do
+      sign_in_as_author
+      within '.answers' do
+        click_on 'add link'
+        fill_link_fields(url)
+        click_on 'Edit answer'  
+        expect(page).to have_link url, href: url
+      end
+    end
+
     scenario 'Author edits his answer with attached files' do
       sign_in_as_author
       within '.answers' do
@@ -73,5 +84,10 @@ feature 'User can edit his answer', %q{
     sign_in(author)
     visit question_path(question)
     click_on 'Edit'
+  end
+
+  def fill_link_fields(url)
+    fill_in 'Link name', with: url
+    fill_in 'Url', with: url
   end
 end
