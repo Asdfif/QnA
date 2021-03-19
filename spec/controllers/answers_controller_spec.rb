@@ -69,7 +69,6 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)     
       end
 
-      # !!!!!!!!!!
       it 'renders destroy view' do
         delete :destroy, params: { id: answer }, format: :js
         expect(response).to render_template :destroy
@@ -161,7 +160,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'User is author' do
       let!(:answer) { create(:answer, user: user, question: question) }
-      
+      let!(:reward) { create(:reward, question: question) }
       before do 
         login(user)
         patch :make_it_best, params: { id: answer }, format: :js
@@ -176,6 +175,12 @@ RSpec.describe AnswersController, type: :controller do
       it "changes question's best answer for self" do
         question.reload
         expect(question.best_answer).to eq answer
+      end
+
+      it "changes question's reward's user to answer's author" do
+        question.reload
+
+        expect(question.reward.user).to eq user
       end
     end
   end
