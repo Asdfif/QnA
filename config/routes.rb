@@ -3,6 +3,10 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  resources :users, only: %i[] do
+    get 'rewards', on: :member
+  end
+
   resources :questions do
     resources :answers, shallow: true, only: %i[create update destroy] do
       patch 'make_it_best', on: :member

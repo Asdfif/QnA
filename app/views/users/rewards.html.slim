@@ -1,0 +1,8 @@
+- if @rewards.present?
+  h3= "Your rewards:"
+  - @rewards.each do |r|
+    p= r.question.title
+    = image_tag(r.img_url, size: "20x20")
+    = r.title
+- else
+  h3= "You don't have rewards"
