@@ -8,10 +8,13 @@
         p Links:
         ul
           - answer.links.each do |l|
-            - if l.is_a_gist?
-              = render 'shared/gist', url: l.url
-            - else
+            div data-link-id="#{ l.id }"
+              - if l.is_a_gist?
+                = render 'shared/gist', url: l.url
+              - else
                 li= link_to l.name, l.url, target: :_blank
+              - if current_user&.owner_of?(answer)
+                = link_to 'Delete link', link_path(l), method: :delete, remote: true
 
     - if answer.files.attached?
       - answer.files.each do |file|

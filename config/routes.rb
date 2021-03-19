@@ -13,4 +13,5 @@ Rails.application.routes.draw do
     delete 'delete_file', on: :member
   end
   
+  resources :links, only: %i[destroy]
 end
