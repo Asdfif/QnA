@@ -1,6 +1,10 @@
 <h1><%= @question.title %></h1>
 <p> <%= @question.body %><p>
-
+<% if @question.reward.present? %>
+  Reward:
+  <%= "#{@question.reward.title}" %>
+  <%= image_tag(@question.reward.img_url, size: "20x20")%>
+<% end %>
 <% if @question.files.attached? %>
   <% @question.files.each do |file| %>
     <p>

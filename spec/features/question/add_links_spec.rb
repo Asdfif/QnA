@@ -20,7 +20,7 @@ feature 'User can add links to question', %q{
     expect(page).to have_link url, href: url
   end
 
-  scenario 'User adds links when give an answer', js: true do
+  scenario 'User adds links when asks question', js: true do
     url2 = 'http://google.ru'
     sign_in_and_visit_as(author)
 
@@ -30,7 +30,7 @@ feature 'User can add links to question', %q{
     
     click_on 'add link'
 
-    within all(:css, '.nested-fields')[0] do
+    within all(:css, '.nested-fields')[1] do
       fill_link_fields(url2)
     end
 
