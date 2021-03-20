@@ -1,6 +1,7 @@
 class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
+  has_many :links, dependent: :destroy, as: :linkable
 
   has_many_attached :files
 
@@ -8,11 +9,14 @@ class Answer < ApplicationRecord
 
   validate :count_of_best
 
+  accepts_nested_attributes_for :links, reject_if: :all_blank
+
   def make_it_best
     unless best?
       Answer.transaction do
         question.answers.update_all(best: false)
         update!(best: true)
+        question.reward&.update(user: user)
       end
     end
   end

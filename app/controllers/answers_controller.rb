@@ -18,7 +18,8 @@ class AnswersController < ApplicationController
 
   def make_it_best
     if current_user&.owner_of?(@answer.question)
-      @prev_best_answer_id = @answer.question.best_answer&.id
+      question = @answer.question
+      @prev_best_answer_id = question.best_answer&.id
       @answer.make_it_best
     end
   end
@@ -34,6 +35,8 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, 
+                                   files: [], 
+                                   links_attributes: [:name, :url])
   end
 end

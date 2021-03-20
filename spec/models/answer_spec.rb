@@ -2,8 +2,11 @@ require 'rails_helper'
 RSpec.describe Answer, type: :model do
   it { should belong_to(:question) }
   it { should belong_to(:user) }
+  it { should have_many(:links).dependent(:destroy) }
 
   it { should validate_presence_of :body }
+
+  it { should accept_nested_attributes_for :links }
 
   describe 'Association between question and best answer' do
     let (:author) { create(:user) }
@@ -38,6 +41,14 @@ RSpec.describe Answer, type: :model do
       answer1.reload
 
       expect(answer1.best).to eq false
+    end
+
+    it 'reward the author of answer' do
+      reward = create(:reward, question: question)
+      answer = create(:answer, user: author, question: question)
+      answer.make_it_best
+
+      expect(author.rewards.first).to eq reward
     end
   end
 

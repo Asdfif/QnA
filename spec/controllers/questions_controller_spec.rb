@@ -23,12 +23,28 @@ RSpec.describe QuestionsController, type: :controller do
     it 'renders show view' do
       expect(response).to render_template :show
     end
+
+    it 'assigns a new Answer for question' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
+    it 'assigns a Link for answer' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
+    end
   end
 
   describe 'GET #new' do
     before { login(user) }
 
     before { get :new }
+
+    it 'assigns a new Question to @question' do
+      expect(assigns(:question)).to be_a_new(Question)
+    end
+
+    it 'assigns a new Link for question' do
+      expect(assigns(:question).links.first).to be_a_new(Link)
+    end
 
     it 'renders new view' do
       expect(response).to render_template :new
@@ -49,14 +65,14 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'with unvalids attributes' do
+    context 'with invalids attributes' do
       it 'does not save the question' do
-        expect { post :create, params: { question: attributes_for(:question, :invalid), user: user}}.to_not change(Question, :count)
+        expect { post :create, params: { question: attributes_for(:question, :invalid), user: user}, format: :js }.to_not change(Question, :count)
       end
 
       it 're-renders new view' do
-        post :create, params: { question: attributes_for(:question, :invalid) }
-        expect(response).to render_template :new
+        post :create, params: { question: attributes_for(:question, :invalid) }, format: :js
+        expect(response).to render_template :create
       end
     end
   end

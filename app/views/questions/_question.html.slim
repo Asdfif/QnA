@@ -16,6 +16,11 @@
         p
           = f.label 'Your question body'
           = f.text_area :body, id: :question_body
+        p Links:
+        div id='links'
+          = f.fields_for :links do |l|
+            = render 'shared/link_fields', f: l
+          = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
         p
           = f.label :files
           = f.file_field :files, multiple: true

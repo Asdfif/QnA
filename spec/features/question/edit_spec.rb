@@ -7,7 +7,8 @@ feature 'User can edit his question', %q{
   given!(:user) { create(:user) }
   given!(:author) { create(:user) }
   given!(:question) { create(:question, user: author) }
-  
+  given(:url) { 'https://github.com/Asdfif/QnA/pull/5' }
+
   scenario 'Unauthenticated user can not edit question' do
     visit questions_path
     expect(page).to_not have_link 'Edit'
@@ -34,6 +35,16 @@ feature 'User can edit his question', %q{
 
         expect(page).to have_content 'error(s)'
       end
+    end
+
+    scenario 'adds links to question' do
+      sign_in_as_author
+      click_on 'add link'
+      fill_link_fields(url)
+      click_on 'Edit question'
+      click_on question.title
+      
+      expect(page).to have_link url, href: url
     end
 
     scenario "tries to edit other user's question" do
@@ -73,5 +84,10 @@ feature 'User can edit his question', %q{
     sign_in(author)
     visit questions_path
     click_on 'Edit'
+  end
+
+  def fill_link_fields(url)
+    fill_in 'Link name', with: url
+    fill_in 'Url', with: url
   end
 end

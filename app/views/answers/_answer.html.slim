@@ -3,6 +3,19 @@
     p= answer.body
     div data-errors-answer-id="#{answer.id}"
 
+    - if answer.links.present?
+      .answer-links
+        p Links:
+        ul
+          - answer.links.each do |l|
+            div data-link-id="#{ l.id }"
+              - if l.is_a_gist?
+                = render 'shared/gist', url: l.url
+              - else
+                li= link_to l.name, l.url, target: :_blank
+              - if current_user&.owner_of?(answer)
+                = link_to 'Delete link', link_path(l), method: :delete, remote: true
+
     - if answer.files.attached?
       - answer.files.each do |file|
         p data-file-id="#{file.id}"= link_to file.filename.to_s, url_for(file), target: :_blank
@@ -20,7 +33,12 @@
         p
           = f.label :files
           = f.file_field :files, multiple: true
-        
+        p Links:
+        div id='links'
+          = f.fields_for :links do |l|
+            = render 'shared/link_fields', f: l
+          = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
+ 
         - if answer.files.attached?
           - answer.files.each do |file|
             p data-file-id="#{file.id}"= file.filename.to_s
