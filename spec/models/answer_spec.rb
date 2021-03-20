@@ -42,6 +42,14 @@ RSpec.describe Answer, type: :model do
 
       expect(answer1.best).to eq false
     end
+
+    it 'reward the author of answer' do
+      reward = create(:reward, question: question)
+      answer = create(:answer, user: author, question: question)
+      answer.make_it_best
+
+      expect(author.rewards.first).to eq reward
+    end
   end
 
   it 'have many attached files' do

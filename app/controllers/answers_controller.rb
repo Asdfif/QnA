@@ -21,7 +21,6 @@ class AnswersController < ApplicationController
       question = @answer.question
       @prev_best_answer_id = question.best_answer&.id
       @answer.make_it_best
-      question.reward&.reward_the_user(@answer.user)
     end
   end
 
