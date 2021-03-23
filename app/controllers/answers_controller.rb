@@ -5,7 +5,19 @@ class AnswersController < ApplicationController
   def create
     @answer = current_user.answers.build(answer_params)
     @answer.question = question
-    @answer.save
+
+    respond_to do |format|
+      if @answer.save
+        format.json do 
+          render json: [@answer, @answer.links, answer_files_array]
+        end
+        # format.js
+      else
+        format.json do 
+          render json: @answer.errors.full_messages, status: :unprocessable_entity 
+        end
+      end
+    end
   end
 
   def update
@@ -37,6 +49,14 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body, 
                                    files: [], 
-                                   links_attributes: [:name, :url])
+                                   links_attributes: [:name, :url, :_destroy])
+  end
+
+  def answer_files_array
+    array = []
+    @answer.files.map do |file|
+      array.push([file.filename.to_s , url_for(file)])
+    end
+    array
   end
 end

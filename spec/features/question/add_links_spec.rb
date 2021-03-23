@@ -5,7 +5,7 @@ feature 'User can add links to question', %q{
   I'd like to be able to add link
 } do
   given(:author) { create(:user) }
-  given(:url) { 'https://github.com/Asdfif/QnA/pull/5' }
+  given(:url) { 'https://yandex.ru/' }
 
 
   scenario 'User adds link when asks question' do
