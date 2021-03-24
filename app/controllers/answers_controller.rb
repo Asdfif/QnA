@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!
   before_action :answer, only: %i[update destroy make_it_best delete_file]
 
@@ -11,7 +13,6 @@ class AnswersController < ApplicationController
         format.json do 
           render json: [@answer, @answer.links, answer_files_array]
         end
-        # format.js
       else
         format.json do 
           render json: @answer.errors.full_messages, status: :unprocessable_entity 

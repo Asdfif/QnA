@@ -1,28 +1,38 @@
-h1= @question.title
-p= @question.body
-- if @question.reward.present?
-  'Reward:'
-  = @question.reward.title 
-  = image_tag(@question.reward.img_url, size: "20x20")
+.question data-question-id="#{@question.id}"
 
-- if @question.files.attached?
-  - @question.files.each do |file|
-    p
-      = link_to file.filename.to_s, url_for(file), target: :_blank
+  
+  h1= @question.title
+  p= @question.body
 
-- if @question.links.present?
-  .question-links
-    p 
-      'Links:'
-      ul
-        - @question.links.each do |l|
-          div data-link-id="#{l.id}"
-            - if l.is_a_gist?
-              = render 'shared/gist', url: l.url
-            - else
-              li= link_to l.name, l.url, target: :_blank
-            - if current_user&.owner_of?(@question)
-              = link_to 'Delete link', link_path(l), method: :delete, remote: true
+  
+  .rating
+
+    = render 'shared/rating', resource: @question
+    .rating-errors
+
+  - if @question.reward.present?
+    'Reward:'
+    = @question.reward.title 
+    = image_tag(@question.reward.img_url, size: "20x20")
+
+  - if @question.files.attached?
+    - @question.files.each do |file|
+      p
+        = link_to file.filename.to_s, url_for(file), target: :_blank
+
+  - if @question.links.present?
+    .question-links
+      p 
+        'Links:'
+        ul
+          - @question.links.each do |l|
+            div data-link-id="#{l.id}"
+              - if l.is_a_gist?
+                = render 'shared/gist', url: l.url
+              - else
+                li= link_to l.name, l.url, target: :_blank
+              - if current_user&.owner_of?(@question)
+                = link_to 'Delete link', link_path(l), method: :delete, remote: true
 
 hr
 p= 'Best answer'
@@ -37,7 +47,6 @@ hr
 .answers
   p= 'Answers'
   = render @question.answers.where(best: false)
-
 .answer-errors
 
 = render partial: 'answers/new'
