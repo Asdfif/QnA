@@ -11,7 +11,7 @@ class AnswersController < ApplicationController
     respond_to do |format|
       if @answer.save
         format.json do 
-          render json: [@answer, @answer.links, answer_files_array]
+          render json: { answer: @answer,  links: @answer.links, files: answer_files_array }
         end
       else
         format.json do 
@@ -54,10 +54,8 @@ class AnswersController < ApplicationController
   end
 
   def answer_files_array
-    array = []
     @answer.files.map do |file|
-      array.push([file.filename.to_s , url_for(file)])
+      [file.filename.to_s , url_for(file)]
     end
-    array
   end
 end

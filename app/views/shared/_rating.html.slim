@@ -9,15 +9,15 @@
   -if !current_user.owner_of?(resource) 
     -if !resource&.votes.where(user_id: current_user&.id).present?
       p
-        = link_to 'vote for', vote_for_resource(resource), method: :post, class: 'vote', remote: true, data: { type: :json }
+        = link_to 'vote for', polymorphic_path(resource, action: 'vote_for'), method: :post, class: 'vote', remote: true, data: { type: :json }
       p
-        = link_to 'vote against', vote_against_resource(resource), method: :post, class: 'vote', remote: true, data: { type: :json }
+        = link_to 'vote against', polymorphic_path(resource, action: 'vote_against'), method: :post, class: 'vote', remote: true, data: { type: :json }
       p
-        = link_to 'cancel vote', cancel_vote_resource(resource), method: :delete, class: 'cancel-vote hidden', remote: true, data: { type: :json }  
+        = link_to 'cancel vote', polymorphic_path(resource, action: 'cancel_vote'), method: :delete, class: 'cancel-vote hidden', remote: true, data: { type: :json }  
     - else
       p
-        = link_to 'vote for', vote_for_resource(resource), method: :post, class: 'vote hidden', remote: true, data: { type: :json }
+        = link_to 'vote for', polymorphic_path(resource, action: 'vote_for'), method: :post, class: 'vote hidden', remote: true, data: { type: :json }
       p
-        = link_to 'vote against', vote_against_resource(resource), method: :post, class: 'vote hidden', remote: true, data: { type: :json }
+        = link_to 'vote against', polymorphic_path(resource, action: 'vote_against'), method: :post, class: 'vote hidden', remote: true, data: { type: :json }
       p
-        = link_to 'cancel vote', cancel_vote_resource(resource), method: :delete, class: 'cancel-vote', remote: true, data: { type: :json } 
+        = link_to 'cancel vote', polymorphic_path(resource, action: 'cancel_vote'), method: :delete, class: 'cancel-vote', remote: true, data: { type: :json } 

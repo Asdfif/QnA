@@ -16,19 +16,19 @@ module Voted
   def cancel_vote
     @votable.votes.find_by(user_id: current_user.id)&.destroy
     respond_to do |format|
-      format.json { render json: [@votable.rating, @votable.class.to_s.underscore, @votable.id] }
+      format.json { render json: { rating: @votable.rating, klass: @votable.class.to_s.underscore, id: @votable.id } }
     end
   end
 
   private
   
   def save_vote(value)
-    @vote = @votable.votes.build(value: value, user_id: current_user.id)
+    @vote = @votable.votes.build(value: value, user: current_user)
     respond_to do |format|
       if @vote.save
-        format.json { render json: [@votable.rating, @votable.class.to_s.underscore, @votable.id] }
+        format.json { render json: { rating: @votable.rating, klass: @votable.class.to_s.underscore, id: @votable.id } }
       else
-        format.json { render json: [@vote.errors.full_messages, @votable.class.to_s.underscore, @votable.id], status: :unprocessable_entity  }
+        format.json { render json: { errors: @vote.errors.full_messages, klass: @votable.class.to_s.underscore, id: @votable.id }, status: :unprocessable_entity  }
       end
     end
   end
