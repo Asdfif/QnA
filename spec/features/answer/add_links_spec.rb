@@ -6,7 +6,7 @@ feature 'User can add links to question', %q{
 } do
   given(:author) { create(:user) }
   given(:question) { create(:question, user: author) }
-  given(:url) { 'https://github.com/Asdfif/QnA/pull/5' }
+  given(:url) { 'https://yandex.ru/' }
 
   scenario 'User adds link when give an answer', js: true do
     sign_in_and_visit_as(author)

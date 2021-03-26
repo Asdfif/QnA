@@ -1,11 +1,24 @@
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!
   before_action :answer, only: %i[update destroy make_it_best delete_file]
 
   def create
     @answer = current_user.answers.build(answer_params)
     @answer.question = question
-    @answer.save
+
+    respond_to do |format|
+      if @answer.save
+        format.json do 
+          render json: { answer: @answer,  links: @answer.links, files: answer_files_array }
+        end
+      else
+        format.json do 
+          render json: @answer.errors.full_messages, status: :unprocessable_entity 
+        end
+      end
+    end
   end
 
   def update
@@ -37,6 +50,12 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body, 
                                    files: [], 
-                                   links_attributes: [:name, :url])
+                                   links_attributes: [:name, :url, :_destroy])
+  end
+
+  def answer_files_array
+    @answer.files.map do |file|
+      [file.filename.to_s , url_for(file)]
+    end
   end
 end

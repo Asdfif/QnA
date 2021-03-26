@@ -10,6 +10,7 @@ import "channels"
 import "jquery"
 import './answers.js'
 import './questions.js'
+import 'utilities/rating.js'
 require("@nathanvda/cocoon")
 
 Rails.start()

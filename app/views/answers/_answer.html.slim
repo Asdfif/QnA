@@ -3,6 +3,7 @@
     p= answer.body
     div data-errors-answer-id="#{answer.id}"
 
+
     - if answer.links.present?
       .answer-links
         p Links:
@@ -47,4 +48,8 @@
         = f.submit 'Edit answer'
 
     - if !answer.best? && current_user&.owner_of?(answer.question)
-        br= link_to 'Make it best', make_it_best_answer_path(answer), method: :patch, remote: true
+      br= link_to 'Make it best', make_it_best_answer_path(answer), method: :patch, remote: true
+    
+    .rating
+      = render 'shared/rating', resource: answer
+      .rating-errors

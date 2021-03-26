@@ -1,5 +1,9 @@
 require 'rails_helper'
+require Rails.root.join "spec/controllers/concerns/voted_controller_spec.rb"
+
 RSpec.describe AnswersController, type: :controller do
+  it_behaves_like "voted"
+
   let (:user) { create(:user) }
   let (:question) { create(:question, user: user) }
 
@@ -7,29 +11,29 @@ RSpec.describe AnswersController, type: :controller do
     before { login(user) }
 
     it 'associated with question' do
-      post :create, params: valid_params, format: :js
+      post :create, params: valid_params, format: :json
       expect(assigns(:answer).question).to eq question
     end
 
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
-        expect { post :create, params: valid_params, format: :js}.to change(Answer, :count).by(1)
+        expect { post :create, params: valid_params, format: :json}.to change(Answer, :count).by(1)
       end
 
-      it 'renders answers/create view' do
-        post :create, params: valid_params, format: :js
-        expect(response).to render_template :create
+      it 'has status 200' do
+        post :create, params: valid_params, format: :json
+        expect(response.status).to eq 200
       end
     end
 
     context 'with invalids attributes' do
       it 'does not save the answer' do
-        expect { post :create, params: invalid_params, format: :js}.to_not change(Answer, :count)
+        expect { post :create, params: invalid_params, format: :json}.to_not change(Answer, :count)
       end
 
-      it 're-renders question show view' do
-        post :create, params: invalid_params, format: :js
-        expect(response).to render_template :create
+      it 'has status 422' do
+        post :create, params: invalid_params, format: :json
+        expect(response.status).to eq 422
       end
     end
   end
