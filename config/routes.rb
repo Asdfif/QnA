@@ -28,4 +28,6 @@ Rails.application.routes.draw do
   end
   
   resources :links, only: %i[destroy]
+
+  mount ActionCable.server => '/cable'
 end

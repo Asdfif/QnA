@@ -3,6 +3,8 @@ class QuestionsController < ApplicationController
   
   before_action :authenticate_user!, except: %i[index show]
   before_action :question, except: %i[create]
+
+  after_action :publish_question, only: %i[create]
   def index
     @questions = Question.all
   end
@@ -43,13 +45,35 @@ class QuestionsController < ApplicationController
     @question ||= params[:id] ? Question.with_attached_files.find(params[:id]) : Question.new
   end
 
-  #helper_method :question
-
   def question_params
     params.require(:question).permit(:title, 
                                      :body, 
                                      files: [], 
                                      links_attributes: [:name, :url, :_destroy],
                                      reward_attributes: [:title, :img_url, :_destroy])
+  end
+
+  # def publish_question
+  #   return if @question.errors.any?
+  #   ActionCable.server.broadcast(
+  #     'questions',
+  #     ApplicationController.render(
+  #       partial: 'questions/question', 
+  #       locals: { question: @question }
+  #     )
+  #   )
+  # end
+
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast( 'questions', render_question )
+  end
+
+  def render_question
+    ApplicationController.renderer.instance_variable_set(:@env, { "warden" => warden })
+
+    ApplicationController.render(
+      partial: 'questions/questions',
+      locals: { questions: Question.all })
   end
 end
