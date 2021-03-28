@@ -23,7 +23,7 @@
 
     - if current_user&.owner_of?(answer)
 
-      = link_to 'Delete answer', answer_path(answer), method: :delete, remote: true , class: 'delete-answer-link', data: { confirm: 'Sure?', answer_id: answer.id }
+      = link_to 'Delete answer', answer_path(answer), method: :delete, remote: true , class: 'delete-answer-link', data: { confirm: 'Sure?', nswer_id: answer.id }
 
       br= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
 

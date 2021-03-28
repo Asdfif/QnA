@@ -12,6 +12,7 @@ import './answers.js'
 import './questions.js'
 import 'utilities/rating.js'
 require("@nathanvda/cocoon")
+require("handlebars")
 
 Rails.start()
 Turbolinks.start()

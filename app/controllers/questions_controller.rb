@@ -5,6 +5,7 @@ class QuestionsController < ApplicationController
   before_action :question, except: %i[create]
 
   after_action :publish_question, only: %i[create]
+  
   def index
     @questions = Question.all
   end
@@ -45,6 +46,12 @@ class QuestionsController < ApplicationController
     @question ||= params[:id] ? Question.with_attached_files.find(params[:id]) : Question.new
   end
 
+  def questions
+    Question.all.map do |question|
+      [question.id, question.title]
+    end
+  end
+
   def question_params
     params.require(:question).permit(:title, 
                                      :body, 
@@ -53,27 +60,20 @@ class QuestionsController < ApplicationController
                                      reward_attributes: [:title, :img_url, :_destroy])
   end
 
-  # def publish_question
-  #   return if @question.errors.any?
-  #   ActionCable.server.broadcast(
-  #     'questions',
-  #     ApplicationController.render(
-  #       partial: 'questions/question', 
-  #       locals: { question: @question }
-  #     )
-  #   )
-  # end
-
   def publish_question
     return if @question.errors.any?
-    ActionCable.server.broadcast( 'questions', render_question )
+    ActionCable.server.broadcast(
+      'questions', 
+      title: @question.title,
+      id: @question.id
+    )
   end
 
-  def render_question
-    ApplicationController.renderer.instance_variable_set(:@env, { "warden" => warden })
+  # def render_question
+  #   ApplicationController.renderer.instance_variable_set(:@env, { "warden" => warden })
 
-    ApplicationController.render(
-      partial: 'questions/questions',
-      locals: { questions: Question.all })
-  end
+  #   ApplicationController.render(
+  #     partial: 'questions/questions',
+  #     locals: { questions: Question.all })
+  # end
 end

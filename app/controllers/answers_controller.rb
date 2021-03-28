@@ -3,22 +3,23 @@ class AnswersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :answer, only: %i[update destroy make_it_best delete_file]
-
+  
+  after_action :publish_answer, only: %i[create]
   def create
     @answer = current_user.answers.build(answer_params)
     @answer.question = question
-
-    respond_to do |format|
-      if @answer.save
-        format.json do 
-          render json: { answer: @answer,  links: @answer.links, files: answer_files_array }
-        end
-      else
-        format.json do 
-          render json: @answer.errors.full_messages, status: :unprocessable_entity 
-        end
-      end
-    end
+    # respond_to do |format|
+       @answer.save
+    #     format.json do 
+    #       render json: { answer: @answer,  links: @answer.links, files: answer_files_array }
+    #     end
+    #     format.js { render :js }
+    #   else
+    #     format.json do 
+    #       render json: @answer.errors.full_messages, status: :unprocessable_entity 
+    #     end
+    #   end
+    # end
   end
 
   def update
@@ -55,7 +56,35 @@ class AnswersController < ApplicationController
 
   def answer_files_array
     @answer.files.map do |file|
-      [file.filename.to_s , url_for(file)]
+      [file.filename.to_s , url_for(file), file.id]
     end
   end
+
+  def answer_links_array 
+    @answer.links.map do |link|
+      [link.name, link.url]
+    end
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+    ActionCable.server.broadcast( 
+      "questions/#{params[:question_id]}/answers", 
+      { 
+        author_id: @answer.user_id, 
+        answer: @answer,
+        files: answer_files_array,
+        links: answer_links_array
+      } 
+    )
+  end
+
+  # def render_answer
+  #   ApplicationController.renderer.instance_variable_set(:@env, { "warden" => warden })
+
+  #   ApplicationController.render(
+  #     partial: 'answers/answers',
+  #     locals: { answers: question.answers },
+  #     author_id: @answer.user_id )
+  # end
 end
