@@ -1,11 +1,9 @@
 <% if @prev_best_answer_id.present? %>
-  console.log('yes')
   $('[data-answer-id=' + '<%= j @answer.id %>' + ']').remove()
   $('.best-answer').html('<%= j (render @answer) %>')
   $('[data-answer-id=' + '<%= j @prev_best_answer_id %>' + ']').remove()
   $('.answers').append('<%= j (render Answer.find(@prev_best_answer_id)) %>')
 <% else %>
-  console.log('no')
   $('[data-answer-id=' + '<%= j @answer.id %>' + ']').remove()
   $('.best-answer').html('<%= j (render @answer) %>')
 <% end %>

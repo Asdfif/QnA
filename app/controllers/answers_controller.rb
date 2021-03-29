@@ -1,27 +1,18 @@
 class AnswersController < ApplicationController
   include Voted
-
+  
   before_action :authenticate_user!
-  before_action :answer, only: %i[update destroy make_it_best delete_file]
+  before_action :answer, except: %i[create]
   
   after_action :publish_answer, only: %i[create]
+  
   def create
     @answer = current_user.answers.build(answer_params)
     @answer.question = question
-    # respond_to do |format|
-       @answer.save
-    #     format.json do 
-    #       render json: { answer: @answer,  links: @answer.links, files: answer_files_array }
-    #     end
-    #     format.js { render :js }
-    #   else
-    #     format.json do 
-    #       render json: @answer.errors.full_messages, status: :unprocessable_entity 
-    #     end
-    #   end
-    # end
+    @comment = Comment.new
+    @answer.save
   end
-
+  
   def update
     @answer.update(answer_params) if current_user.owner_of?(@answer)
   end
@@ -70,21 +61,10 @@ class AnswersController < ApplicationController
     return if @answer.errors.any?
     ActionCable.server.broadcast( 
       "questions/#{params[:question_id]}/answers", 
-      { 
         author_id: @answer.user_id, 
         answer: @answer,
         files: answer_files_array,
         links: answer_links_array
-      } 
     )
   end
-
-  # def render_answer
-  #   ApplicationController.renderer.instance_variable_set(:@env, { "warden" => warden })
-
-  #   ApplicationController.render(
-  #     partial: 'answers/answers',
-  #     locals: { answers: question.answers },
-  #     author_id: @answer.user_id )
-  # end
 end

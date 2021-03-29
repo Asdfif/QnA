@@ -7,7 +7,6 @@ $(document).on('turbolinks:load', function(){
     let questionId = $('.question').data('questionId')
     let template = require('./templates/answers.hbs')
 
-    console.log(questionId)
     if (window.answerChannel == undefined ) {
       window.answerChannel = consumer.subscriptions.create({channel: "AnswersChannel", question_id: questionId}, {
         connected() {
@@ -21,11 +20,8 @@ $(document).on('turbolinks:load', function(){
         },
 
         received(data) {
-          console.log("received ")
-          console.log("user id " + gon.user_id)
-          console.log('author id ' + data.author_id)
-          console.log('answer ' + data.answer)
-          
+          console.log("received answer")
+
           if (gon.user_id != data.author_id) {
             let files_links = "" 
             $.each(data.files, function(index, value) {
@@ -41,13 +37,8 @@ $(document).on('turbolinks:load', function(){
             data.links = links
             $('.answers').append(template(data)) 
           }
-          
-          
-          // answersList.html(data)
-          // console.log('received')
-          // Called when there's incoming data on the websocket for this channel
         }
-      });
+      })
     }
   }
 })

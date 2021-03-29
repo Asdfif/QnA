@@ -1,0 +1,12 @@
+<% if @comment.persisted? %>
+  <% if @comment.commentable.is_a?(Answer) %>
+    $('[data-answer-id=<%= j @comment.commentable.id %>]')
+      .find('.comments')
+      .append('<%= j (render @comment) %>')
+  <% else %>
+    $('[data-question-id=<%= j @comment.commentable.id %>]')
+      .find('.comments')
+      .append('<%= j (render @comment) %>')
+  <% end %>
+  $('.new-comment #comment_body').val('')
+<% end %>

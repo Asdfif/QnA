@@ -3,7 +3,6 @@
     p= answer.body
     div data-errors-answer-id="#{answer.id}"
 
-
     - if answer.links.present?
       .answer-links
         p Links:
@@ -20,6 +19,16 @@
     - if answer.files.attached?
       - answer.files.each do |file|
         p data-file-id="#{file.id}"= link_to file.filename.to_s, url_for(file), target: :_blank
+
+    .comments 
+      - if answer.comments.present?
+        = "Comments:"
+        = render 'comments/comments', resource: answer
+    .new-comment
+      - if current_user
+        - @comment = answer.comments.build(user: current_user)
+        = render 'comments/new', resource: answer
+
 
     - if current_user&.owner_of?(answer)
 

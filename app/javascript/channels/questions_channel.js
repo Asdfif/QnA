@@ -3,7 +3,7 @@ import consumer from "./consumer"
 if (window.questionChannel == undefined ) {
   window.questionChannel = consumer.subscriptions.create("QuestionsChannel", {
     connected() {
-      console.log("connected")
+      console.log("connected questions")
       this.perform('subscribed')
       // Called when the subscription is ready for use on the server
     },
@@ -17,7 +17,6 @@ if (window.questionChannel == undefined ) {
       // $.each(data.questions_titles, function(index, value) {
         question = "<p>" + "<a href=" + "/questions/" + data.id + ">" + data.title +"</a>" + "</p>"
       // })
-      console.log(question)
       $('.questions').append(question)
       // Called when there's incoming data on the websocket for this channel
     }

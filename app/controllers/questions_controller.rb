@@ -13,6 +13,7 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answer.links.build
+    @comment = Comment.new
   end
 
   def new
@@ -68,12 +69,4 @@ class QuestionsController < ApplicationController
       id: @question.id
     )
   end
-
-  # def render_question
-  #   ApplicationController.renderer.instance_variable_set(:@env, { "warden" => warden })
-
-  #   ApplicationController.render(
-  #     partial: 'questions/questions',
-  #     locals: { questions: Question.all })
-  # end
 end
