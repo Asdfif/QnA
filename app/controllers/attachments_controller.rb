@@ -1,5 +1,6 @@
 class AttachmentsController < ApplicationController
   before_action :authenticate_user!
+  authorize_resource
   before_action :file
 
   def delete_file
