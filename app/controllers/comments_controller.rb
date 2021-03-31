@@ -5,13 +5,10 @@ class CommentsController < ApplicationController
   after_action :publish_comment, only: %i[create]
 
   def create
-    @comment = @commentable.comments.build(
-      user: current_user, 
-      body: params['comment'][:body]
+    @comment = @commentable.comments.create(
+      comment_params.merge({ user: current_user })
     )
-    @comment.save
   end
-
 
   private
 
@@ -28,7 +25,7 @@ class CommentsController < ApplicationController
     if params[:question_id]
       return @commentable.id 
     elsif params[:answer_id]
-      return @commentable.question.id
+      return @commentable.question_id
     end
   end
 
@@ -42,5 +39,9 @@ class CommentsController < ApplicationController
       commentable_id: @commentable.id,
       body: @comment.body,
     )
+  end
+
+  def comment_params
+    params.require(:comment).permit(:body)
   end
 end
