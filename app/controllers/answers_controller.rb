@@ -61,7 +61,6 @@ class AnswersController < ApplicationController
     return if @answer.errors.any?
     ActionCable.server.broadcast( 
       "questions/#{params[:question_id]}/answers", 
-        author_id: @answer.user_id, 
         answer: @answer,
         files: answer_files_array,
         links: answer_links_array

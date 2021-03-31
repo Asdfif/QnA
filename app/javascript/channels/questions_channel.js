@@ -14,9 +14,7 @@ if (window.questionChannel == undefined ) {
 
     received(data) {
       let question = ""
-      // $.each(data.questions_titles, function(index, value) {
-        question = "<p>" + "<a href=" + "/questions/" + data.id + ">" + data.title +"</a>" + "</p>"
-      // })
+      question = "<p>" + "<a href=" + "/questions/" + data.question.id + ">" + data.question.title +"</a>" + "</p>"
       $('.questions').append(question)
       // Called when there's incoming data on the websocket for this channel
     }

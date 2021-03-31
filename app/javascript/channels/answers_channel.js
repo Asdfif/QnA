@@ -22,7 +22,7 @@ $(document).on('turbolinks:load', function(){
         received(data) {
           console.log("received answer")
 
-          if (gon.user_id != data.author_id) {
+          if (gon.user_id != data.answer.user_id) {
             let files_links = "" 
             $.each(data.files, function(index, value) {
               files_links = files_links + "<p data-file-id=" + value[3] + ">" + "<a target=_blank href=" + value[1] + '">' + value[0] + "</a>" + "</p>"
