@@ -17,6 +17,7 @@ feature 'User can edit his question', %q{
   describe 'Authenticated user', js: true do
     scenario 'edit his question' do
       sign_in_as_author
+      # save_and_open_page
       within '.questions' do
         fill_in :question_title, with: 'edited question title'
         click_on 'Edit question'

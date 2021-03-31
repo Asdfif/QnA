@@ -3,6 +3,9 @@ class QuestionsController < ApplicationController
   
   before_action :authenticate_user!, except: %i[index show]
   before_action :question, except: %i[create]
+
+  after_action :publish_question, only: %i[create]
+  
   def index
     @questions = Question.all
   end
@@ -10,6 +13,7 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answer.links.build
+    @comment = Comment.new
   end
 
   def new
@@ -43,7 +47,11 @@ class QuestionsController < ApplicationController
     @question ||= params[:id] ? Question.with_attached_files.find(params[:id]) : Question.new
   end
 
-  #helper_method :question
+  def questions
+    Question.all.map do |question|
+      [question.id, question.title]
+    end
+  end
 
   def question_params
     params.require(:question).permit(:title, 
@@ -51,5 +59,14 @@ class QuestionsController < ApplicationController
                                      files: [], 
                                      links_attributes: [:name, :url, :_destroy],
                                      reward_attributes: [:title, :img_url, :_destroy])
+  end
+
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast(
+      'questions', 
+      title: @question.title,
+      id: @question.id
+    )
   end
 end

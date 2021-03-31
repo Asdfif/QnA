@@ -20,7 +20,9 @@ Rails.application.routes.draw do
                         concerns: %i[votable],
                         only: %i[create update destroy] do
       patch 'make_it_best', on: :member
+      resources :comments, shallow: true, only: %i[create]
     end
+    resources :comments, shallow: true, only: %i[create]
   end
 
   resources :attachments, only: %i[] do
@@ -28,4 +30,6 @@ Rails.application.routes.draw do
   end
   
   resources :links, only: %i[destroy]
+
+  mount ActionCable.server => '/cable'
 end

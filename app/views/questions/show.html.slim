@@ -6,7 +6,6 @@
 
   
   .rating
-
     = render 'shared/rating', resource: @question
     .rating-errors
 
@@ -34,16 +33,24 @@
               - if current_user&.owner_of?(@question)
                 = link_to 'Delete link', link_path(l), method: :delete, remote: true
 
-hr
-p= 'Best answer'
+  hr
+  p= 'Best answer'
 
-.best-answer
-  - if @question.best_answer.present?
-    .answers
+  .best-answer
+    - if @question.best_answer.present?
       = render @question.best_answer
-  - else
-    = 'Not selected by the author'
-hr
+    - else
+      = 'Not selected by the author'
+  hr
+
+  .comments
+    - if @question.comments.present?
+      = "Comments:"
+      = render 'comments/comments', resource: @question
+  .new-comment
+    - if current_user
+      = render 'comments/new', resource: @question
+
 .answers
   p= 'Answers'
   = render @question.answers.where(best: false)

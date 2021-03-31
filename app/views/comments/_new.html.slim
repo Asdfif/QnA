@@ -1,0 +1,6 @@
+- if resource
+  = form_with model: [resource, @comment], local: false, class: 'new-comment', data: { type: [:json, :js] } do |f|
+    p
+      = f.label 'Your comment'
+      = f.text_area :body, id: :comment_body
+    = f.submit 'Send comment', class: 'new-comment-link'
