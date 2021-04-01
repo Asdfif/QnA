@@ -27,25 +27,35 @@ class Ability
     guest_abilities
 
     can :create, [Question, Answer, Comment], { user_id: user.id }
+
+    can :create, Reward do |reward|
+      reward.question.user_id == user.id
+    end
+
     can :create, Link do |link|
       link.linkable.user_id == user.id
     end
-    can :create, ActiveStorage::Attachment do |attachment|
-      attachment.record.user_id == user.id
+
+    can %i[vote_for vote_against cancel_vote], [Question, Answer] do |votable| 
+      votable.user_id != user.id
     end
 
     can :update, [Question, Answer], { user_id: user.id }
 
     can :destroy, [Question, Answer], { user_id: user.id }
+
     can :destroy, [Link] do |link|
       link.linkable.user_id == user.id
     end
-    can :delete_file,ActiveStorage::Attachment do |attachment|
+
+    can :delete_file, ActiveStorage::Attachment do |attachment|
       attachment.record.user_id == user.id
     end
-    
+
     can :make_it_best, Answer do  |answer| 
       answer.question.user_id == user.id
     end
+    
+    can :rewards, User, { id: user.id }
   end
 end

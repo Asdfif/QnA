@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :gon_user, unless: :devise_controller?
 
-  check_authorization
+  check_authorization unless: :devise_controller?
   
   private
 

@@ -22,6 +22,9 @@ module Voted
 
   private
   
+  def authorize_vote
+  end
+
   def save_vote(value)
     @vote = @votable.votes.build(value: value, user: current_user)
     respond_to do |format|

@@ -79,11 +79,23 @@ RSpec.describe Ability, type: :model do
     end
 
     context 'attachments' do
-      it { should be_able_to :create, file }
       it { should be_able_to :delete_file, file }
 
-      it { should_not be_able_to :create, other_file  }
       it { should_not be_able_to :delete_file, other_file }
-    end 
+    end
+
+    context 'rewards' do
+      it { should be_able_to :create, create(:reward, question: question) }
+      it { should_not be_able_to :create, create(:reward, question: other_question) }
+    end
+
+    context 'votes' do
+      it { should be_able_to %i[vote_for vote_against], other_question }
+      it { should be_able_to :cancel_vote, other_question }
+
+ 
+      it { should_not be_able_to %i[vote_for vote_against], question }
+      it { should_not be_able_to :cancel_vote, question }
+    end
   end
 end
