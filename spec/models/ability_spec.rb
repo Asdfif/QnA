@@ -91,8 +91,6 @@ RSpec.describe Ability, type: :model do
 
     context 'votes' do
       it { should be_able_to %i[vote_for vote_against], other_question }
-      it { should be_able_to :cancel_vote, other_question }
-
  
       it { should_not be_able_to %i[vote_for vote_against], question }
       it { should_not be_able_to :cancel_vote, question }

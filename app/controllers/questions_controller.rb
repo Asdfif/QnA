@@ -2,8 +2,8 @@ class QuestionsController < ApplicationController
   include Voted
   
   before_action :authenticate_user!, except: %i[index show]
-  authorize_resource
   before_action :question, except: %i[create]
+  authorize_resource
 
   after_action :publish_question, only: %i[create]
   

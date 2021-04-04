@@ -140,8 +140,8 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.body).to eq question.body
       end
 
-      it 're-renders update view' do
-        expect(response).to render_template :update        
+      it 'have http status 403' do
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
@@ -183,9 +183,9 @@ RSpec.describe QuestionsController, type: :controller do
         expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)     
       end
 
-      it 'redirects to show' do
+      it 'redirects to root' do
         delete :destroy, params: { id: question }
-        expect(response).to redirect_to question_path(question)
+        expect(response).to redirect_to root_path
       end
     end
   end

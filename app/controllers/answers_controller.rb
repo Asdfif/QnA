@@ -2,9 +2,9 @@ class AnswersController < ApplicationController
   include Voted
   
   before_action :authenticate_user!
-  authorize_resource
   before_action :answer, except: %i[create]
-  
+  authorize_resource
+
   after_action :publish_answer, only: %i[create]
   
   def create
