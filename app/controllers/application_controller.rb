@@ -12,10 +12,10 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
       format.json do 
-        redirect_to root_url, status: :forbidden
+        render status: :forbidden
       end
       format.js do 
-        redirect_to root_url, status: :forbidden
+        render status: :forbidden 
       end
       format.html do
         redirect_to root_url, alert: exception.message
