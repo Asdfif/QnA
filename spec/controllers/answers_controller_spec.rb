@@ -63,9 +63,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)     
       end
 
-      it 'renders destroy view' do
+      it 'have http status 403' do
         delete :destroy, params: { id: answer }, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
@@ -122,8 +122,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq answer.body
       end
 
-      it 're-renders update view' do
-        expect(response).to render_template :update        
+      it 'have http status 403' do
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

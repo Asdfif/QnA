@@ -6,14 +6,17 @@ module Voted
   end
 
   def vote_for
+    authorize! :vote_for, @votable 
     save_vote(1)
   end
 
   def vote_against
+    authorize! :vote_for, @votable
     save_vote(-1)
   end
 
   def cancel_vote
+    authorize! :cancel_vote, @votable
     @votable.votes.find_by(user_id: current_user.id)&.destroy
     respond_to do |format|
       format.json { render json: { rating: @votable.rating, klass: @votable.class.to_s.underscore, id: @votable.id } }
@@ -21,7 +24,7 @@ module Voted
   end
 
   private
-  
+
   def save_vote(value)
     @vote = @votable.votes.build(value: value, user: current_user)
     respond_to do |format|

@@ -3,6 +3,7 @@ class QuestionsController < ApplicationController
   
   before_action :authenticate_user!, except: %i[index show]
   before_action :question, except: %i[create]
+  authorize_resource
 
   after_action :publish_question, only: %i[create]
   

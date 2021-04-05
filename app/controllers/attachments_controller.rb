@@ -3,6 +3,7 @@ class AttachmentsController < ApplicationController
   before_action :file
 
   def delete_file
+    authorize! :delete_file, @file
     @file.purge if current_user.owner_of?(@file.record)
   end
 

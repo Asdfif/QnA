@@ -25,7 +25,7 @@ shared_examples_for "voted" do
   describe "POST #vote_against" do
     before { login(user) }
 
-    it 'creates a vote with 1 value' do
+    it 'creates a vote with -1 value' do
       expect{ post :vote_against, params: { id: votable }, format: :json }.to change(votable.votes.where(value: -1), :count).by(1)
     end
   end
@@ -33,10 +33,10 @@ shared_examples_for "voted" do
   describe "DELETE #vote_against" do
     before do
       login(user)
-      post :vote_against, params: { id: votable }, format: :json
+      post :vote_against, params: { id: votable }, format: :json      
     end
 
-    it 'creates a vote with +1 value' do
+    it 'delete a vote ' do
       expect{ delete :cancel_vote, params: { id: votable }, format: :json }.to change(votable.votes, :count).by(-1)
     end
   end

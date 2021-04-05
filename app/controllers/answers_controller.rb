@@ -3,7 +3,8 @@ class AnswersController < ApplicationController
   
   before_action :authenticate_user!
   before_action :answer, except: %i[create]
-  
+  authorize_resource
+
   after_action :publish_answer, only: %i[create]
   
   def create
