@@ -104,6 +104,8 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.4.4)
+    doorkeeper (5.5.0)
+      railties (>= 5)
     erubi (1.10.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
@@ -299,6 +301,7 @@ DEPENDENCIES
   capybara (>= 3.26)
   cocoon
   devise
+  doorkeeper
   factory_bot_rails
   gon
   handlebars

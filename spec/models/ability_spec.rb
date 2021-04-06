@@ -95,5 +95,9 @@ RSpec.describe Ability, type: :model do
       it { should_not be_able_to %i[vote_for vote_against], question }
       it { should_not be_able_to :cancel_vote, question }
     end
+
+    context 'API' do
+      it { should be_able_to :me, user }
+    end
   end
 end
