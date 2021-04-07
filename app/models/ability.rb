@@ -62,7 +62,7 @@ class Ability
     
     can :rewards, User, { id: user.id }
 
-    can %i[me others index], User do |profile|
+    can %i[me others index answers], User do |profile|
       profile.id == user.id
     end
   end
