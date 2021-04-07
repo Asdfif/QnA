@@ -153,4 +153,38 @@ describe 'Answers API', type: :request do
       end
     end
   end
+
+  describe 'PATCH /api/v1/answers/:id' do
+    let(:headers) { { "ACCEPT" => "application/json" } }
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:answer) { create(:answer, user: user, question: question) }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+    let(:method) { :put }
+    
+    it_behaves_like 'API Authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+      let(:body) { 'body' }
+      let(:question_response) { json['answer'] }
+      before do
+        put api_path, params: { 
+                                access_token: access_token.token, 
+                                answer: { 
+                                            body: body
+                                          } 
+                               }, 
+                       headers: headers
+      end
+      
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      it 'returns answer new body' do
+        expect(question_response['body']).to eq body
+      end
+    end
+  end
 end

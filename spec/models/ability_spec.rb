@@ -97,7 +97,7 @@ RSpec.describe Ability, type: :model do
     end
 
     context 'API' do
-      it { should be_able_to %i[me others index show create destroy], user }
+      it { should be_able_to %i[me others index show create destroy update], user }
     end
   end
 end

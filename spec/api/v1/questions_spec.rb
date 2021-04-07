@@ -175,4 +175,39 @@ describe 'Questions API', type: :request do
       end
     end
   end
+
+  describe 'PATCH /api/v1/questions/:id' do
+    let(:headers) { { "ACCEPT" => "application/json" } }
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+    let(:method) { :put }
+    
+    it_behaves_like 'API Authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+      let(:title) { 'title' }
+      let(:body) { question.body }
+      let(:question_response) { json['question'] }
+      before do
+        put api_path, params: { 
+                                access_token: access_token.token, 
+                                question: { 
+                                            title: title
+                                          } 
+                               }, 
+                       headers: headers
+      end
+      
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      it 'returns question new title and  old body' do
+        expect(question_response['title']).to eq title
+        expect(question_response['body']).to eq body
+      end
+    end
+  end
 end
