@@ -96,4 +96,49 @@ describe 'Questions API', type: :request do
       # end
     end
   end
+
+  describe 'POST /api/v1/questions' do
+    let(:headers) { { "ACCEPT" => "application/json" } }
+    let(:api_path) { "/api/v1/questions" }
+    let(:method) { :post }
+    
+    it_behaves_like 'API Authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token) }
+      let(:user) { create(:user) }
+      let(:title) { 'title' }
+      let(:body) { 'body' }
+      let(:links_attributes) { { 0 => {name: "link", url: "http://127.0.0.1:3000/questions/new", _destroy:  false } } }
+
+      before do
+        post api_path, params: { 
+                                access_token: access_token.token, 
+                                question: { 
+                                            title: title, 
+                                            body: body, 
+                                            links_attributes: links_attributes
+                                          } 
+                               }, 
+                       headers: headers
+      end
+      
+      let(:question_response) { json['question'] }
+
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      it 'returns question title and body' do
+        expect(question_response['title']).to eq title
+        expect(question_response['body']).to eq body
+      end
+
+      it 'returns list of links' do
+        expect(question_response['links'].size).to eq 1
+        expect(question_response['links'].first['name']).to eq 'link'
+        expect(question_response['links'].first['url']).to eq "http://127.0.0.1:3000/questions/new"
+      end
+    end
+  end
 end

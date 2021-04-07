@@ -7,13 +7,28 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def show
-    authorize! :answers, current_resource_owner
+    authorize! :show, current_resource_owner
     render json: @question, serializer: QuestionSerializer
+  end
+
+  def create
+    authorize! :create, current_resource_owner
+    @question = current_resource_owner.questions.build(question_params)
+    if @question.save
+      render json: @question, serializer: QuestionSerializer
+    end
   end
 
   private
 
   def set_question
     @question ||= Question.find(params[:id])
+  end
+
+  def question_params
+    params.require(:question).permit(:title, 
+                                     :body, 
+                                     links_attributes: [:name, :url, :_destroy],
+                                     reward_attributes: [:title, :img_url, :_destroy])
   end
 end
