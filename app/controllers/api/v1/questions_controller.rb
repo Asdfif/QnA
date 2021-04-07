@@ -1,5 +1,5 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
-  before_action :set_question, only: %i[answers show]
+  before_action :set_question, only: %i[answers show destroy]
   def index
     @questions = Question.all
     authorize! :index, current_resource_owner
@@ -16,6 +16,14 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     @question = current_resource_owner.questions.build(question_params)
     if @question.save
       render json: @question, serializer: QuestionSerializer
+    end
+  end
+
+  def destroy
+    authorize! :destroy, current_resource_owner
+    if current_resource_owner.owner_of?(@question)
+      @question.destroy
+      render json: { message: "#{@question.title} deleted", status: 200 }
     end
   end
 

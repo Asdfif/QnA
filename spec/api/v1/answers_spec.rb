@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Questions API', type: :request do
+describe 'Answers API', type: :request do
   let(:headers) { { "CONTENT_TYPE" => "application/json",
                     "ACCEPT" => "application/json" } } 
 
@@ -36,10 +36,10 @@ describe 'Questions API', type: :request do
     end
   end
 
-  describe 'GET /api/v1/questions/:id/' do
+  describe 'GET /api/v1/answers/:id/' do
     let(:question) { create(:question, user: create(:user)) }
     let(:answer) { create(:answer, user: create(:user), question: question) }
-    let(:api_path) { "/api/v1/questions/#{question.id}/answers/#{answer.id}" }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
     let(:method) { :get }
     
     it_behaves_like 'API Authorizable'
@@ -106,6 +106,10 @@ describe 'Questions API', type: :request do
         expect(response).to be_successful
       end
 
+      it 'saves answer in DB' do
+        expect(Answer.count).to eq 1      
+      end
+
       it 'returns answer body' do
         expect(answer_response['body']).to eq body
       end
@@ -114,6 +118,38 @@ describe 'Questions API', type: :request do
         expect(answer_response['links'].size).to eq 1
         expect(answer_response['links'].first['name']).to eq 'link'
         expect(answer_response['links'].first['url']).to eq "http://127.0.0.1:3000/questions/new"
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/questions/:i' do
+    let(:headers) { { "ACCEPT" => "application/json" } }
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let!(:answer) { create(:answer, user: user, question: question) }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+    let(:method) { :delete }
+    
+    it_behaves_like 'API Authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+
+      before do
+        delete api_path, params: { 
+                                  access_token: access_token.token, 
+                                  id: answer.id 
+                                 }, 
+                         headers: headers     
+        
+      end
+      
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      it 'changes questions count by -1' do
+        expect(Answer.count).to eq 0      
       end
     end
   end
