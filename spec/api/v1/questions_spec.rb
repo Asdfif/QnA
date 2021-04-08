@@ -3,6 +3,7 @@ require 'rails_helper'
 describe 'Questions API', type: :request do
   let(:headers) { { "CONTENT_TYPE" => "application/json",
                     "ACCEPT" => "application/json" } }
+
   describe 'GET /api/v1/questions' do
     let(:api_path) { '/api/v1/questions' }
     let(:method) { :get }
@@ -66,147 +67,52 @@ describe 'Questions API', type: :request do
     
     it_behaves_like 'API Authorizable'
 
-    context 'authorized' do
-      let(:access_token) { create(:access_token) }
+    it_behaves_like 'API Represented' do
+      let(:object) { question }
+      let(:resource) { :question }
+    end
+  end
+
+  context 'POST PATCH DELETE' do
+    let(:headers) { { "ACCEPT" => "application/json" } }
+
+    describe 'POST /api/v1/questions' do
+      let(:api_path) { "/api/v1/questions" }
+      let(:method) { :post }
+      
+      it_behaves_like 'API Authorizable'
+
+      it_behaves_like 'API Creatable' do
+        let(:resource) { :question }
+        let(:model) { Question }
+        let(:title) { 'title' }
+      end
+    end
+
+    describe 'DELETE /api/v1/questions/:id' do
       let(:user) { create(:user) }
-      let!(:comments) { create_list(:comment, 2, user: user, commentable: question) }
-
-      before do
-        question.links.build(name: attributes_for(:link)[:name], url: attributes_for(:link)[:url]).save
-        # question.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb', content_type: 'rb')
-        question.save
-        get api_path, params: { access_token: access_token.token } , headers: headers
-      end
+      let!(:question) { create(:question, user: user) }
+      let(:api_path) { "/api/v1/questions/#{question.id}" }
+      let(:method) { :delete }
       
-      let(:question_response) { json['question'] }
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'API Authorizable'
 
-      it 'returns list of comments' do
-        expect(question_response['comments'].size).to eq 2
+      it_behaves_like 'API Destroyable' do
+        let(:resource) { question }
+        let(:model) { Question }
       end
-
-      it 'returns list of links' do
-        expect(question_response['links'].size).to eq 1
-      end
-
-      # it 'returns list of ttached files' do
-      #   expect(question_response['files'].size).to eq 1
-      # end
     end
-  end
 
-  describe 'POST /api/v1/questions' do
-    let(:headers) { { "ACCEPT" => "application/json" } }
-    let(:api_path) { "/api/v1/questions" }
-    let(:method) { :post }
-    
-    it_behaves_like 'API Authorizable'
-
-    context 'authorized' do
-      let(:access_token) { create(:access_token) }
+    describe 'PATCH /api/v1/questions/:id' do
       let(:user) { create(:user) }
-      let(:title) { 'title' }
-      let(:body) { 'body' }
-      let(:links_attributes) { { 0 => {name: "link", url: "http://127.0.0.1:3000/questions/new", _destroy:  false } } }
-
-      before do
-        post api_path, params: { 
-                                access_token: access_token.token, 
-                                question: { 
-                                            title: title, 
-                                            body: body, 
-                                            links_attributes: links_attributes
-                                          } 
-                               }, 
-                       headers: headers
-      end
+      let(:question) { create(:question, user: user) }
+      let(:api_path) { "/api/v1/questions/#{question.id}" }
+      let(:method) { :put }
       
-      let(:question_response) { json['question'] }
-
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
-
-      it 'saves question in DB' do
-        expect(Question.count).to eq 1    
-      end
-
-      it 'returns question title and body' do
-        expect(question_response['title']).to eq title
-        expect(question_response['body']).to eq body
-      end
-
-      it 'returns list of links' do
-        expect(question_response['links'].size).to eq 1
-        expect(question_response['links'].first['name']).to eq 'link'
-        expect(question_response['links'].first['url']).to eq "http://127.0.0.1:3000/questions/new"
-      end
-    end
-  end
-
-  describe 'DELETE /api/v1/questions/:id' do
-    let(:headers) { { "ACCEPT" => "application/json" } }
-    let(:user) { create(:user) }
-    let!(:question) { create(:question, user: user) }
-    let(:api_path) { "/api/v1/questions/#{question.id}" }
-    let(:method) { :delete }
-    
-    it_behaves_like 'API Authorizable'
-
-    context 'authorized' do
-      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
-
-      before do
-        delete api_path, params: { 
-                                  access_token: access_token.token, 
-                                  id: question.id 
-                                 }, 
-                         headers: headers
-      end
-      
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
-
-      it 'changes questions count by -1' do
-        expect(Question.count).to eq 0      
-      end
-    end
-  end
-
-  describe 'PATCH /api/v1/questions/:id' do
-    let(:headers) { { "ACCEPT" => "application/json" } }
-    let(:user) { create(:user) }
-    let(:question) { create(:question, user: user) }
-    let(:api_path) { "/api/v1/questions/#{question.id}" }
-    let(:method) { :put }
-    
-    it_behaves_like 'API Authorizable'
-
-    context 'authorized' do
-      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
-      let(:title) { 'title' }
-      let(:body) { question.body }
-      let(:question_response) { json['question'] }
-      before do
-        put api_path, params: { 
-                                access_token: access_token.token, 
-                                question: { 
-                                            title: title
-                                          } 
-                               }, 
-                       headers: headers
-      end
-      
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
-
-      it 'returns question new title and  old body' do
-        expect(question_response['title']).to eq title
-        expect(question_response['body']).to eq body
+      it_behaves_like 'API Authorizable'
+       
+      it_behaves_like 'API Updatable' do
+        let(:resource) { :question }
       end
     end
   end
