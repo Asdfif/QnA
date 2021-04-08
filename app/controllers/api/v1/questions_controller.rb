@@ -1,19 +1,19 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
   before_action :set_question, only: %i[answers show destroy update]
-  before_action :authorize_user, only: %i[show create update destroy]
   
   def index
+    authorize! :index, Question
     @questions = Question.all
-    authorize_user
     render json: @questions, each_serializer: QuestionsSerializer, root: "questions"
   end
 
   def show
-    authorize! :show, current_resource_owner
+    authorize! :show, @question
     render json: @question, serializer: QuestionSerializer
   end
 
   def create
+    authorize! :create, Question
     @question = current_resource_owner.questions.build(question_params)
     if @question.save
       render json: @question, serializer: QuestionSerializer
@@ -23,7 +23,8 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
   
   def update
-    if current_resource_owner.owner_of?(@question) && @question.update(question_params)
+    authorize! :update, @question
+    if @question.update(question_params)
       render json: @question, serializer: QuestionSerializer
     else
       render json: { message: 'bad request' }, status: :bad_request
@@ -31,6 +32,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def destroy
+    authorize! :destroy, @question
     if current_resource_owner.owner_of?(@question)
       @question.destroy
       render json: { message: "#{@question.title} deleted", status: 200 }
@@ -38,10 +40,6 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   private
-
-  def authorize_user
-    authorize! params['action'].to_sym, current_resource_owner
-  end
 
   def set_question
     @question ||= Question.find(params[:id])

@@ -26,15 +26,6 @@ RSpec.describe AnswersController, type: :controller do
     context 'User is author' do
       before { login(author) }
 
-      # it 'assigns the requested answer to @answer' do
-      #   delete :destroy, params: { id: answer }, format: :js
-      #   expect(assigns(:answer)).to eq answer
-      # end
-
-      # it 'deletes the answer' do
-      #   expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)      
-      # end
-
       it 'renders destroy view' do
         delete :destroy, params: { id: answer }, format: :js
         expect(response).to render_template :destroy
@@ -43,15 +34,6 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'User is not author' do
       before { login(user) }
-
-      # it 'assigns the requested answer to @answer' do
-      #   delete :destroy, params: { id: answer }, format: :js
-      #   expect(assigns(:answer)).to eq answer
-      # end
-
-      # it ' do not deletes the answer' do
-      #   expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)     
-      # end
 
       it 'have http status 403' do
         delete :destroy, params: { id: answer }, format: :js
