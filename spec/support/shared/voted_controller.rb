@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-shared_examples_for "voted" do
+shared_examples_for "Voted" do
   let(:author) { create(:user) }
   let(:user) { create(:user) }
 

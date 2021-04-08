@@ -1,8 +1,7 @@
 require 'rails_helper'
-require Rails.root.join "spec/controllers/concerns/voted_controller_spec.rb"
 
 RSpec.describe AnswersController, type: :controller do
-  it_behaves_like "voted"
+  it_behaves_like "Voted"
 
   let (:user) { create(:user) }
   let (:question) { create(:question, user: user) }
@@ -15,33 +14,26 @@ RSpec.describe AnswersController, type: :controller do
       expect(assigns(:answer).question).to eq question
     end
 
-    context 'with valid attributes' do
-      it 'saves a new answer in the database' do
-        expect { post :create, params: valid_params, format: :js}.to change(Answer, :count).by(1)
-      end
-    end
-
-    context 'with invalids attributes' do
-      it 'does not save the answer' do
-        expect { post :create, params: invalid_params, format: :js}.to_not change(Answer, :count)
-      end
+    it_behaves_like 'Savable' do
+      let(:model) { Answer }
     end
   end
 
   describe 'DELETE #destroy' do
-    context 'User is author' do
       let (:author) { create(:user) }
-      before { login(author) }
       let! (:answer) { create(:answer, question: question, user: author) }
 
-      it 'assigns the requested answer to @answer' do
-        delete :destroy, params: { id: answer }, format: :js
-        expect(assigns(:answer)).to eq answer
-      end
+    context 'User is author' do
+      before { login(author) }
 
-      it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)      
-      end
+      # it 'assigns the requested answer to @answer' do
+      #   delete :destroy, params: { id: answer }, format: :js
+      #   expect(assigns(:answer)).to eq answer
+      # end
+
+      # it 'deletes the answer' do
+      #   expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)      
+      # end
 
       it 'renders destroy view' do
         delete :destroy, params: { id: answer }, format: :js
@@ -50,81 +42,35 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'User is not author' do
-      let (:author) { create(:user) }
       before { login(user) }
-      let! (:answer) { create(:answer, question: question, user: author) }
 
-      it 'assigns the requested answer to @answer' do
-        delete :destroy, params: { id: answer }, format: :js
-        expect(assigns(:answer)).to eq answer
-      end
+      # it 'assigns the requested answer to @answer' do
+      #   delete :destroy, params: { id: answer }, format: :js
+      #   expect(assigns(:answer)).to eq answer
+      # end
 
-      it ' do not deletes the answer' do
-        expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)     
-      end
+      # it ' do not deletes the answer' do
+      #   expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)     
+      # end
 
       it 'have http status 403' do
         delete :destroy, params: { id: answer }, format: :js
         expect(response).to have_http_status(:forbidden)
       end
+    end
+
+    it_behaves_like 'Destroyed' do
+      let(:klass) { :answer }
+      let(:object) { answer }
+      let(:model) { Answer }
     end
   end
 
   describe 'PATCH #update' do
-    context 'User is author' do
-      before { login(user) }
-
-      let!(:answer) { create(:answer, question: question, user: user) }
-
-      context 'with valid attributes' do
-        it 'changes answer attributes' do
-          patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-          answer.reload
-          expect(answer.body).to eq 'new body'
-        end
-
-        it 'renders update view' do
-          patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-          expect(response).to render_template :update
-        end
-      end
-
-      context 'with invalid attributes' do 
-        it 'does not change answer attributes' do
-          expect do
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
-          end.to_not change(answer, :body)
-        end
-
-        it 'renders update view' do
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
-          expect(response).to render_template :update
-        end
-      end
-    end
-
-    context 'User is not author' do
-      let (:author) { create(:user) }
-      let!(:answer) { create(:answer, question: question, user: author) }
-
-      before do 
-        login(user)
-          patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-      end
-      
-      it 'assigns the requested answer to @answer' do
-          expect(assigns(:answer)).to eq answer
-        end
-
-      it 'does not change answer attributes' do
-        answer.reload
-
-        expect(answer.body).to eq answer.body
-      end
-
-      it 'have http status 403' do
-        expect(response).to have_http_status(:forbidden)
-      end
+    it_behaves_like 'Updatable' do
+      let(:answer) { create(:answer, user: user, question: question) }
+      let(:model) { :answer }
+      let(:object) { answer }
     end
   end
 
