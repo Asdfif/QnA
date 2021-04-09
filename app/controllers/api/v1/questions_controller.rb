@@ -18,7 +18,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     if @question.save
       render json: @question, serializer: QuestionSerializer
     else
-      render json: { message: 'bad request' }, status: :bad_request
+      render json: { message: 'bad request' }, status: :unprocessible_entity
     end
   end
   
@@ -27,16 +27,14 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     if @question.update(question_params)
       render json: @question, serializer: QuestionSerializer
     else
-      render json: { message: 'bad request' }, status: :bad_request
+      render json: { message: 'bad request' }, status: :unprocessible_entity
     end
   end
 
   def destroy
     authorize! :destroy, @question
-    if current_resource_owner.owner_of?(@question)
-      @question.destroy
-      render json: { message: "#{@question.title} deleted", status: 200 }
-    end
+    @question.destroy
+    render json: { message: "#{@question.title} deleted", status: 200 }
   end
 
   private
