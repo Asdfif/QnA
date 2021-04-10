@@ -2,7 +2,7 @@
 
 class Ability
   include CanCan::Ability
-
+  
   attr_reader :user
 
   def initialize(user)
@@ -61,5 +61,9 @@ class Ability
     end
     
     can :rewards, User, { id: user.id }
+
+    can %i[me others], User do |profile|
+      profile.id == user.id
+    end
   end
 end
