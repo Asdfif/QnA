@@ -20,4 +20,13 @@ RSpec.describe Question, type: :model do
   it_behaves_like 'Votable' do
     let(:klass) { :question }
   end
+
+  describe 'Reputation' do
+    let(:question) { build(:question, user: create(:user)) }
+
+    it 'calls ReputationJob' do
+      expect(ReputationJob).to receive(:perform_later).with(question)
+      question.save!
+    end
+  end
 end
