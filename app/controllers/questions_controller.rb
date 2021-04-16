@@ -3,6 +3,8 @@ class QuestionsController < ApplicationController
   
   before_action :authenticate_user!, except: %i[index show]
   before_action :question, except: %i[create]
+  before_action :subscribe, only: %i[show]
+
   authorize_resource
 
   after_action :publish_question, only: %i[create]
@@ -67,5 +69,9 @@ class QuestionsController < ApplicationController
       'questions', 
       question: @question
     )
+  end
+
+  def subscribe
+    @subscribe = @question.subscribes.find_by(user_id: current_user.id) if current_user
   end
 end

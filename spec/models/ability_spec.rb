@@ -99,5 +99,9 @@ RSpec.describe Ability, type: :model do
     context 'API' do
       it { should be_able_to %i[me others], user }
     end
+
+    context 'Subscribes' do
+      it { should be_able_to %i[create destroy], Subscribe }
+    end
   end
 end

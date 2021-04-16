@@ -7,7 +7,8 @@ class Question < ApplicationRecord
   has_many :answers, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
   has_many :subscribes, dependent: :destroy
-  
+  has_many :subscribers, through: :subscribes
+
   has_one :best_answer, -> { where(best: true) }, class_name: "Answer"
   has_one :reward, dependent: :destroy
 

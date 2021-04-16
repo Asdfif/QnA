@@ -1,10 +1,11 @@
 class NotificationMailer < ApplicationMailer
 
-  def notification(user)
-    @notification = 'You have new answer'
+  def notification(question)
+    @notification = "You have new answer to question: #{question.title}"
 
-    email to: user.email,
-          template_path: 'mailers/notification'
+    question.subscribers.find_each do |subscriber|
+      email to: subscriber.email,
+            template_path: 'mailers/notification'
+    end
   end
-
 end
