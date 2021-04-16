@@ -66,7 +66,7 @@ class Ability
       profile.id == user.id
     end
 
-    can %i[create destroy], Subscribe
-
+    can :create, Subscribe
+    can :destroy, Subscribe, { user_id: user.id }
   end
 end

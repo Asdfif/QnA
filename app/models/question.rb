@@ -21,17 +21,19 @@ class Question < ApplicationRecord
 
   after_create :calculate_reputation
 
+  scope :today, -> { where("DATE(created_at) = ?", Date.today) }
+
   private
 
   def calculate_reputation
     ReputationJob.perform_later(self)
   end
 
-  def self.today
-    questions = []
-    find_each do |question|
-      questions << question if question.created_at.to_date == Date.today
-    end
-    return questions
-  end
+  # def self.today
+  #   questions = []
+  #   find_each do |question|
+  #     questions << question if question.created_at.to_date == Date.today
+  #   end
+  #   return questions
+  # end
 end
