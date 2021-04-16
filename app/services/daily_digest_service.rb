@@ -2,7 +2,7 @@ class DailyDigestService
 
   def send_digest
     User.find_each(batch_size: 500) do |user|
-      DailyDigestMailer.digest(user).deliver_later
+      DailyDigestMailer.digest(user, Question.today).deliver_later
     end
   end
 
