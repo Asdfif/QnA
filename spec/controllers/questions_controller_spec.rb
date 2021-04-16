@@ -111,6 +111,10 @@ RSpec.describe QuestionsController, type: :controller do
       let(:model) { Question }
     end
   end
+  
+  describe 'DELETE #unsubscribe' do
+
+  end
 
   private
  

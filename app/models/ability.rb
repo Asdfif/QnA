@@ -26,7 +26,7 @@ class Ability
   def user_abilities
     guest_abilities
 
-    can :create, [Question, Answer, Comment]
+    can :create, [Question, Answer, Comment, Subscribe]
 
     can :create, Reward do |reward|
       user.owner_of?(reward.question)
@@ -46,7 +46,7 @@ class Ability
 
     can :update, [Question, Answer], { user_id: user.id }
 
-    can :destroy, [Question, Answer], { user_id: user.id }
+    can :destroy, [Question, Answer, Subscribe], { user_id: user.id }
 
     can :destroy, [Link] do |link|
       user.owner_of?(link.linkable)
@@ -65,5 +65,8 @@ class Ability
     can %i[me others], User do |profile|
       profile.id == user.id
     end
+
+    can :create, Subscribe
+    can :destroy, Subscribe, { user_id: user.id }
   end
 end

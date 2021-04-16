@@ -15,6 +15,8 @@ class Answer < ApplicationRecord
 
   accepts_nested_attributes_for :links, reject_if: :all_blank
 
+  after_create :notificate
+
   def make_it_best
     unless best?
       Answer.transaction do
@@ -29,5 +31,11 @@ class Answer < ApplicationRecord
     if best? && question&.answers.where(best: true).count >= 1 && question.best_answer != self
       errors.add(:best, 'can not be more than 1 best answer for one question')
     end
+  end
+
+  private
+
+  def notificate
+    NotificationJob.perform_later(question)
   end
 end
